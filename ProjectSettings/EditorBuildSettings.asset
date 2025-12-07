@@ -6,8 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/DiceyParty/0_Menu/0_Menu.unity
+    guid: 9702e24361df38140a9016879dd4a719
+  - enabled: 1
+    path: Assets/DiceyParty/1_Lobby/1_Lobby.unity
+    guid: 41706036fe4df8e478508c03b850dee7
+  - enabled: 1
+    path: Assets/DiceyParty/2+_MiniGame/2_TestGame/2_TestGame.unity
+    guid: 1e9c5d59c6e028a4dbabb16f2f64b312
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
