@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -18,10 +19,11 @@ namespace DiceyParty.Menu
         [SerializeField] private GameObject _sessionCardPrefab;
         [SerializeField] private Transform _sessionCardParent;
 
-        //[SerializeField] private EdgeGapConnectionStarter _edgeGapConnect;
+        [SerializeField] private EdgeGapConnectionStarter _edgeGapConnect;
 
-        private string _playerName;
-        private string _code;
+        private Dictionary<string, Session> _sessions = new();
+        private Dictionary<string, SessionCardHandler> _sessionCards = new();
+        private Dictionary<string, Button> _sessionButtons = new();
 
         private void Start()
         {
@@ -30,11 +32,80 @@ namespace DiceyParty.Menu
             _cancelButton.onClick.AddListener(CancelButtonClicked);
 
             _connectionContainer.SetActive(true);
-            _hostButton.interactable = false;
-            _joinButton.interactable = false;
+            _hostButton.interactable = true;
+            _joinButton.interactable = true;
 
             _joinContainer.SetActive(false);
             _cancelButton.interactable = true;
+
+            _ = SynchronizeSessions();
+        }
+
+        private async Awaitable SynchronizeSessions()
+        {
+            while (true)
+            {
+                var sessions= await _edgeGapConnect.FetchSessions();
+                UpdateSessionList(sessions);
+                await Awaitable.WaitForSecondsAsync(3);
+            }
+        }
+
+        private void UpdateSessionList(List<Session> sessions)
+        {
+            Dictionary<string, Session> newSessions = new();
+            HashSet<string> processedIds = new();
+
+            foreach (Session s in sessions)
+            {
+                if (newSessions.ContainsKey(s.RequestId)) continue;
+
+                newSessions.Add(s.RequestId, s);
+                processedIds.Add(s.RequestId);
+
+                if (_sessions.ContainsKey(s.RequestId))
+                {
+                    // Update existing
+                    if (_sessions[s.RequestId].PlayerCount != s.PlayerCount)
+                        _sessionCards[s.RequestId].UpdatePlayerCount(s.PlayerCount);
+                }
+                else
+                {
+                    // Create new
+                    CreateSessionCard(s);
+                }
+            }
+
+            // Clean up anything in _sessions that wasn't in the new list
+            foreach (var existingId in _sessions.Keys)
+            {
+                if (!processedIds.Contains(existingId))
+                {
+                    DestroySessionCard(existingId);
+                }
+            }
+
+            _sessions = newSessions;
+        }
+
+        private void CreateSessionCard(Session session)
+        {
+            string requestId = session.RequestId;
+            
+            GameObject go = Instantiate(_sessionCardPrefab, _sessionCardParent);
+            SessionCardHandler handler = go.GetComponent<SessionCardHandler>();
+            _sessionCards.Add(requestId, handler);
+            
+            Button button = handler.Setup(session.RequestId, session.PlayerCount);
+            button.onClick.AddListener(() => SessionButtonClicked(requestId));
+            _sessionButtons.Add(requestId, button);
+        }
+
+        private void DestroySessionCard(string requestId)
+        {
+            _sessionButtons.Remove(requestId);
+            Destroy(_sessionCards[requestId].gameObject);
+            _sessionCards.Remove(requestId);
         }
 
         #region UI
@@ -52,10 +123,17 @@ namespace DiceyParty.Menu
             _joinContainer.SetActive(true);
             Debug.Log("Opened JoinContainer");
         }
-
-        private void ConfirmButtonClicked()
+        
+        private void SessionButtonClicked(string requestId)
         {
-            JoinSession();
+            foreach (var entry in  _sessionButtons)
+            {
+                entry.Value.enabled = false;
+            }
+
+            var session = _sessions[requestId];
+            Debug.Log(session.Host + session.Port);
+            //_edgeGapConnect.JoinSession(session.Host, session.Port);
         }
 
         private void CancelButtonClicked()
@@ -69,8 +147,7 @@ namespace DiceyParty.Menu
         private async void CreateSession()
         {
             _statusText.text = "WAITING FOR RESPONSE ...";
-            Debug.Log("Created Session");
-            /*bool success = await _edgeGapConnect.CreateSession();
+            bool success = await _edgeGapConnect.CreateSession();
             if (!success)
             {
                 _statusText.text = "CREATE PROCESS WAS UNSUCCESSFULL";
@@ -80,21 +157,7 @@ namespace DiceyParty.Menu
             else
             {
                 _statusText.text = "CREATE PROCESS WAS SUCCESSFULL";
-            }*/
-        }
-
-        private async void JoinSession()
-        {
-            _joinStatusText.text = "WAITING FOR RESPONSE ...";
-            Debug.Log("Joined Session");
-            /*bool success = await _edgeGapConnect.JoinSession(_code);
-            if (!success)
-            {
-                _joinStatusText.text = "JOIN PROCESS WAS UNSUCCESSFULL";
-                _cancelButton.interactable = true;
             }
-            else
-                _joinStatusText.text = "JOIN PROCESS WAS SUCCESSFULL";*/
         }
     }
 }
