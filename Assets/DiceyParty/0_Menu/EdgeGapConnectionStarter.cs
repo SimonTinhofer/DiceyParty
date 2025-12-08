@@ -1,133 +1,94 @@
 using System;
+using System.Collections.Generic;
 using FishNet.Managing;
 using UnityEngine;
 using FishNet.Transporting.Bayou;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine.Networking;
+
+
 
 namespace DiceyParty.Menu
 {
     public class EdgeGapConnectionStarter : MonoBehaviour
     {
-        private readonly string _backendBaseUrl = "https://gamebackend-12w8.onrender.com";
+        private readonly string _backendBaseUrl = "https://diceypartyapi.onrender.com";
         [SerializeField] private NetworkManager _networkManager;
         [SerializeField] private Bayou _transport;
 
-        private string _code;
-
         public async Awaitable<bool> CreateSession()
         {
-            CreateSessionResponse createResponse = await CreateSessionAsync();
-            if(createResponse == null)
+            
+            try
             {
+                var createResponse = await PostSessions();
+                if(createResponse == null) return false;
+                return JoinSession(createResponse.Host, createResponse.Port);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError(ex.Message);
                 return false;
             }
-            else
-            {
-                Debug.Log(createResponse.joinCode);
-                _code = createResponse.joinCode;
-                PassCode();
-                _ = JoinSession(_code);
-                return true;
-            }
+            
         }
 
-        private void PassCode()
+        public async Awaitable<List<Session>> FetchSessions( )
         {
-        }
-
-        public async Awaitable<bool> JoinSession(string code)
-        {
-            JoinSessionResponse response = await JoinSessionAsync(code);
-            if(response == null)
+            try
             {
-                return false;
+                var fetchResponse = await GetSessions();
+                return fetchResponse;
             }
-            else
+            catch (Exception ex)
             {
-                Debug.Log($"host: {response.serverHost}, port {response.serverPort}");
-
-                ushort port = (ushort)response.serverPort;
-                string address = response.serverHost;
-
-                _transport.SetPort(port);
-                _transport.SetClientAddress(address);
-                _networkManager.ClientManager.StartConnection();
-                return true;
-            }
-        }
-
-        private async Awaitable<CreateSessionResponse> CreateSessionAsync()
-        {
-            string url = _backendBaseUrl + "/sessions";
-
-            var request = new UnityWebRequest(url, "POST");
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.uploadHandler = new UploadHandlerRaw(new byte[0]);
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            var operation = request.SendWebRequest();
-            while (!operation.isDone)
-                await Awaitable.NextFrameAsync();
-
-            if (request.result != UnityWebRequest.Result.Success)
-            {
-                Debug.LogError("CreateSession failed: " + request.error);
+                Debug.LogError(ex.Message);
                 return null;
             }
-
-            return JsonUtility.FromJson<CreateSessionResponse>(request.downloadHandler.text);
         }
 
-        private async Awaitable<JoinSessionResponse> JoinSessionAsync(string code)
+        public bool JoinSession(string host, int port)
         {
-            string url = _backendBaseUrl + "/sessions/join";
+            _transport.SetClientAddress(host);
+            ushort port32 = (ushort)port;
+            _transport.SetPort(port32);
 
-            JoinRequest body = new JoinRequest { joinCode = code };
-            string jsonBody = JsonUtility.ToJson(body);
-            byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonBody);
+            return _networkManager.ClientManager.StartConnection();
+        }
 
-            var request = new UnityWebRequest(url, "POST");
-            request.uploadHandler = new UploadHandlerRaw(bodyRaw);
-            request.downloadHandler = new DownloadHandlerBuffer();
-            request.SetRequestHeader("Content-Type", "application/json");
-
-            var operation = request.SendWebRequest();
-            while (!operation.isDone)
-                await Awaitable.NextFrameAsync();
-
+        private async Awaitable<Session> PostSessions()
+        {
+            using var request = UnityWebRequest.Post($"{_backendBaseUrl}/sessions", "", "application/json");
+            await request.SendWebRequest();
+            
             if (request.result != UnityWebRequest.Result.Success)
             {
-                Debug.LogError("JoinSession failed: " + request.error);
-                return null;
+                throw new Exception($"Network Error: {request.error} | Response: {request.downloadHandler.text}"); 
             }
-
-            return JsonUtility.FromJson<JoinSessionResponse>(request.downloadHandler.text);
+            
+            return JsonConvert.DeserializeObject<Session>(request.downloadHandler.text);
         }
-
-
-        [Serializable]
-        public class JoinRequest
+        
+        private async Awaitable<List<Session>> GetSessions()
         {
-            public string joinCode;
+            using var request = UnityWebRequest.Get($"{_backendBaseUrl}/sessions");
+            await request.SendWebRequest();
+            
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                throw new Exception($"Network Error: {request.error} | Response: {request.downloadHandler.text}");
+            }
+            
+            return JsonConvert.DeserializeObject<List<Session>>(request.downloadHandler.text);
         }
 
-
-        [Serializable]
-        public class CreateSessionResponse
-        {
-            public string sessionId;
-            public string joinCode;
-        }
-
-        [Serializable]
-        public class JoinSessionResponse
-        {
-            public string sessionId;
-            public string joinCode;
-            public string state;
-            public string serverHost;
-            public int serverPort;
-        }
+        
+    }
+    public class Session { 
+        public string RequestId; 
+        public string Host; 
+        public int Port;
+        public int PlayerCount;
     }
 }
 
