@@ -15,6 +15,7 @@ namespace DiceyParty.Menu
         private readonly string _backendBaseUrl = "https://diceypartyapi.onrender.com";
         [SerializeField] private NetworkManager _networkManager;
         [SerializeField] private Bayou _transport;
+        [SerializeField] private SessionSystemSpawner _sessionSystemSpawner;
 
         public async Awaitable<bool> CreateSession()
         {
@@ -23,6 +24,8 @@ namespace DiceyParty.Menu
             {
                 var createResponse = await PostSessions();
                 if(createResponse == null) return false;
+                _sessionSystemSpawner._isHost = true;
+                _sessionSystemSpawner._sessionId = createResponse.RequestId;
                 return JoinSession(createResponse.Host, createResponse.Port);
             }
             catch (Exception ex)

@@ -11,5 +11,5 @@ AssetOrigin:
   productId: 207815
   packageName: 'FishNet: Networking Evolved'
   packageVersion: 4.6.18R
-  assetPath: Assets/FishNet/Runtime/Observing/Conditions/ScriptableObjects/OwnerOnlyCondition.asset
+  assetPath: Assets/Plugins/FishNet/Runtime/Observing/Conditions/ScriptableObjects/OwnerOnlyCondition.asset
   uploadId: 826418

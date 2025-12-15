@@ -36,5 +36,5 @@ AssetOrigin:
   productId: 207815
   packageName: 'FishNet: Networking Evolved'
   packageVersion: 4.6.18R
-  assetPath: Assets/FishNet/Runtime/Plugins/CodeAnalysis/FishNet.CodeAnalysis.dll
+  assetPath: Assets/Plugins/FishNet/Runtime/Plugins/CodeAnalysis/FishNet.CodeAnalysis.dll
   uploadId: 826418

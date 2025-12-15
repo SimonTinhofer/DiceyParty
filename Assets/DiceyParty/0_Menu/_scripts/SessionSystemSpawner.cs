@@ -1,3 +1,4 @@
+using System;
 using FishNet.Managing;
 using FishNet.Object;
 using System.Collections;
@@ -9,27 +10,48 @@ namespace DiceyParty.Menu
 {
     public class SessionSystemSpawner : NetworkBehaviour
     {
+        public string _sessionId = "empty";
+        public bool _isHost;
         [SerializeField] private GameObject _sessionSystemPrefab;
-        [SerializeField] private Button _spawnButton;
+        [SerializeField] private Button _startButton;
         [SerializeField] private bool _isTester;
 
         public override void OnStartServer()
         {
-            if (_isTester)
-            {
-                _spawnButton.interactable = true;
-                _spawnButton.onClick.AddListener(SpawnSessionSystem);
-            }
-            else
-            {
-                SpawnSessionSystem();
-            }
+            base.OnStartServer();
+            SpawnSessionSystem();
+            if (!_isTester) return;
+            _startButton.interactable = true;
+            _startButton.onClick.AddListener(StartSessionTest);
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            if(_isTester || !_isHost) return;
+            StartSession(_sessionId);
         }
 
         private void SpawnSessionSystem()
         {
             NetworkObject nob = NetworkManager.GetPooledInstantiated(_sessionSystemPrefab, true);
             NetworkManager.ServerManager.Spawn(nob);
+        }
+        
+        [ServerRpc (RequireOwnership = false)]
+        private void StartSession(string sessionId)
+        {
+            SessionDataSystem.SetSessionId(sessionId);
+            SessionStageSystem.ChangeState(SessionStage.Lobby);
+        }
+
+        private void StartSessionTest()
+        {
+            if (!IsServerInitialized) throw new Exception("method must only be called on the server");
+            
+            SessionDataSystem.SetSessionId("test");
+            SessionStageSystem.ChangeState(SessionStage.Lobby);
+
         }
     }
 }

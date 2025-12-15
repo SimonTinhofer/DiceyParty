@@ -1,19 +1,16 @@
-using FishNet.Managing;
 using FishNet.Managing.Scened;
 using FishNet.Object;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using FishNet.Connection;
 
 namespace DiceyParty
 {
     public class SessionStageSystem : NetworkBehaviour
     {
         private static SessionStageSystem _instance;
+        private int _nextMiniGameSceneId;
 
         private void Awake()
         {
@@ -26,12 +23,7 @@ namespace DiceyParty
                 _instance = this;
         }
 
-        public override void OnStartServer()
-        {
-            base.OnStartClient();
-            ChangeState(SessionStage.Lobby);
-        }
-
+        public static void SetNextMiniGame(int sceneId) => _instance._nextMiniGameSceneId = sceneId;
         public static void ChangeState(SessionStage state) => _instance.HandleChangeState(state);
 
         private void HandleChangeState(SessionStage state)
@@ -45,7 +37,7 @@ namespace DiceyParty
                     break;
 
                 case SessionStage.MiniGame:
-                    LoadSceneByIndex(2);
+                    LoadSceneByIndex(_nextMiniGameSceneId);
                     break;
                 
                 default:
@@ -56,8 +48,10 @@ namespace DiceyParty
         private void LoadSceneByIndex (int sceneIndex)
         {
             string sceneName = Path.GetFileNameWithoutExtension(SceneUtility.GetScenePathByBuildIndex(sceneIndex));
-            SceneLoadData sld = new SceneLoadData(sceneName);
-            sld.ReplaceScenes = ReplaceOption.All;
+            SceneLoadData sld = new SceneLoadData(sceneName)
+            {
+                ReplaceScenes = ReplaceOption.All
+            };
             NetworkManager.SceneManager.LoadGlobalScenes(sld);
         }
 

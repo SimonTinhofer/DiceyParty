@@ -14,5 +14,5 @@ AssetOrigin:
   productId: 207815
   packageName: 'FishNet: Networking Evolved'
   packageVersion: 4.6.18R
-  assetPath: Assets/FishNet/Runtime/Editor/Upgrading/UpgradeFromV3ToV4Menu.cs
+  assetPath: Assets/Plugins/FishNet/Runtime/Editor/Upgrading/UpgradeFromV3ToV4Menu.cs
   uploadId: 826418
