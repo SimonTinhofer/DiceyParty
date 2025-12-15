@@ -1,0 +1,17 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "GlobalConfigSO", menuName = "Scriptable Objects/GlobalConfig")]
+public class GlobalConfigSO : ScriptableObject
+{
+    public int MaxPlayerCount = 6;
+    public Color[] Colors =
+    {
+        Color.red,
+        Color.green,
+        Color.blue,
+        Color.yellow,
+        Color.magenta,
+        Color.cyan
+    };
+}
