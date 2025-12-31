@@ -14,4 +14,7 @@ public class GlobalConfigSO : ScriptableObject
         Color.magenta,
         Color.cyan
     };
+
+    public float TutorialDuration = 2;
+    public float ResultsDuration = 2;
 }

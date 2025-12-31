@@ -14,7 +14,7 @@ namespace DiceyParty
         private Dictionary<int, PlayerInfo> _playerData = new ();
         private string _sessionId;
         private Stack<int> _availableColors;
-        private List<int> _clientIds = new();
+        private List<int> _clientIds = new(); //List to track the order players joined / who gets host next
         private int _hostId = -1;
 
         
@@ -83,29 +83,40 @@ namespace DiceyParty
                 playerInfo.SetIsHost(true);
                 return playerInfo;
             }
-            else
-                _hostId = -1;
+            
+            _hostId = -1;
             return null;
         }
-
-        public static int GetHostId()
-        {
-            _instance.CheckIfServer();
-            return _instance._hostId;
-        }
-    
-        private void CheckIfServer()
-        {
-            if (!IsServerInitialized)
-                throw new Exception("This method can not be called on the client");
-        }
-
+        
         public static PlayerInfo UpdateName(string newName, int clientId) => _instance.HandleUpdateName(newName, clientId);
 
         private PlayerInfo HandleUpdateName(string newName, int clientId)
         {
+            CheckIfServer();
             _playerData[clientId].SetName(newName);
             return _playerData[clientId];
+        }
+
+        public static int GetPlayerCount() => _instance.HandleGetPlayerCount();
+
+        private int HandleGetPlayerCount()
+        {
+            CheckIfServer();
+            return _playerData.Count;
+        }
+
+        public static Dictionary<int, PlayerInfo> GetPlayerData() => _instance.HandleGetPlayerData();
+
+        private Dictionary<int, PlayerInfo> HandleGetPlayerData()
+        {
+            CheckIfServer();
+            return _playerData;
+        }
+
+        private void CheckIfServer()
+        {
+            if (!IsServerInitialized)
+                throw new Exception("This method can not be called on the client");
         }
     }
     
