@@ -43,27 +43,29 @@ namespace DiceyParty
             return _instance._sessionId;
         }
 
-        public static PlayerInfo AddPlayerInfo(int clientId) => _instance.HandleAddPlayerInfo(clientId);
+        public static PlayerInfo GetPlayerInfo(int clientId) => _instance.HandleGetPlayerInfo(clientId);
         
-        private PlayerInfo HandleAddPlayerInfo(int clientId)
+        private PlayerInfo HandleGetPlayerInfo(int clientId)
         {
             CheckIfServer();
-            
+            return _playerData.TryGetValue(clientId, out var info) ? info : CreatePlayerInfo(clientId);
+        }
+
+        private PlayerInfo CreatePlayerInfo(int clientId)
+        {
             string playerName = $"Player{clientId}";
             int colorIndex = _availableColors.Pop();
             var player = new PlayerInfo(playerName, colorIndex, clientId);
             _playerData.Add(clientId, player);
-            
             _clientIds.Add(clientId);
             if (_hostId == -1)
             {
                 _hostId = clientId;
                 player.SetIsHost(true);
             }
-            
             return player;
         }
-        
+
         public static PlayerInfo RemovePlayerInfo(int clientId) => _instance.HandleRemovePlayerInfo(clientId);
         
         private PlayerInfo HandleRemovePlayerInfo(int clientId)

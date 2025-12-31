@@ -40,7 +40,7 @@ namespace DiceyParty.Lobby
         {
             NetworkConnection conn = args.Connection;
             int clientId = conn.ClientId;
-            PlayerInfo playerInfo = SessionDataSystem.AddPlayerInfo(clientId);
+            PlayerInfo playerInfo = SessionDataSystem.GetPlayerInfo(clientId);
             
             NetworkObject nob = NetworkManager.GetPooledInstantiated(_playerCardPrefab, true);
             NetworkManager.ServerManager.Spawn(nob, conn);
