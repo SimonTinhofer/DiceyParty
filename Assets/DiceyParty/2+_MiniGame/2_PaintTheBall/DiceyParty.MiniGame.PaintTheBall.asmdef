@@ -1,10 +1,11 @@
 {
-    "name": "DiceyParty.MiniGame.TestGame",
+    "name": "DiceyParty.MiniGame.PaintTheBall",
+    "rootNamespace": "",
     "references": [
-        "GUID:75469ad4d38634e559750d17036d5f7c",
-        "GUID:cc346effd2d4c814d83383ea826f26be",
         "GUID:7c88a4a7926ee5145ad2dfa06f454c67",
-        "GUID:6b704f166388f4247a98460c4d9e62b9"
+        "GUID:cc346effd2d4c814d83383ea826f26be",
+        "GUID:6b704f166388f4247a98460c4d9e62b9",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
