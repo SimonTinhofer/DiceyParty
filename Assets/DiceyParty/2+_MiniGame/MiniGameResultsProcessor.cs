@@ -13,11 +13,11 @@ namespace DiceyParty.MiniGame
             Dictionary<int, PlayerInfo> playerData = SessionDataSystem.GetPlayerData();
             foreach (var entry in placements)
             {
-                int clientID = entry.Key;
+                int clientId = entry.Key;
                 int placement = entry.Value;
-                PlayerInfo p = playerData[clientID];
+                PlayerInfo p = playerData[clientId];
                 ResultCardInfo info = new(p.PlayerName, placement);
-                resultCardData.Add(clientID, info);
+                resultCardData.Add(clientId, info);
             }
             return resultCardData;
         }

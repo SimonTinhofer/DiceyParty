@@ -13,6 +13,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         [SerializeField] private Transform _projectileSpawnPoint;       
         private bool _onCooldown;
         private InputAction _fireAction;
+        private bool _controlsEnabled;
 
         public override void OnStartClient()
         {
@@ -20,11 +21,24 @@ namespace DiceyParty.MiniGame.PaintTheBall
             if (!IsOwner) return;
 
             _fireAction = InputSystem.actions.FindAction("Attack");
+
+            PaintTheBallManager.TogglePlayerControls += ToggleControls;
         }
+        
+        private void OnDestroy()
+        {
+            PaintTheBallManager.TogglePlayerControls -= ToggleControls;
+        }
+
+        private void ToggleControls(bool toggle)
+        {
+            _controlsEnabled = toggle;
+        }
+
 
         private void Update()
         {
-            if (!IsOwner) return;
+            if (!_controlsEnabled) return;
             
             if (_fireAction.IsPressed() & !_onCooldown)
             {

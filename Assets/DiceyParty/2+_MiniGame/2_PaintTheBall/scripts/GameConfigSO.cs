@@ -9,16 +9,12 @@ namespace DiceyParty.MiniGame.PaintTheBall
     {
         public int IcoSpereSubdivisionLevel = 2;
         public float IcoSphereScale = 5;
-        public float PaintRadius = 0.2f;
+        public float PaintRadius = 0.3f;
         public float ShootingForce = 20;
-        public float ShootingCooldown = 1;
-        public float MinForce = 0.3f;
-        public float LookSpeed = 30;
-        public float MaxYaw = 45;
+        public float ShootingCooldown = 0.7f;
+        public float LookSpeed = 20;
         public float MaxPitch = 45;
-        public float SphereDirectionChangeInterval = 2;
-        public float SphereRotationSpeed = 20;
-        public float GameDuration = 20;
+        public int GameDuration = 20;
 
         public float AngleSpeed = 90;
         public float Radius = 13.5f;

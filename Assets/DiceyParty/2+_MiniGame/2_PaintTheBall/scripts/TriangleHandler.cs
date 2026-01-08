@@ -13,7 +13,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         private Mesh _mesh;
         private IcoTriangle[] _triangles;
 
-        public int TrianglesCount => _triangles.Length;
+        public int TriangleCount => _triangles.Length;
 
         private void Start()
         {
@@ -60,7 +60,8 @@ namespace DiceyParty.MiniGame.PaintTheBall
             var colors = _mesh.colors;
             foreach (IcoTriangle triangle in trianglesToColor)
             {
-                Color color = _globalConfig.Colors[triangle.Owner];
+                int colorIndex = SessionDataSystem.GetPlayerColorIndexAsClient(triangle.Owner);
+                Color color = _globalConfig.Colors[colorIndex];
 
                 for(int i = 0; i < triangle.VerticeIndexes.Length; i++)
                 {

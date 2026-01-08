@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 
 namespace DiceyParty
@@ -10,11 +11,13 @@ namespace DiceyParty
     {
         private static SessionDataSystem _instance;
         [SerializeField] private GlobalConfigSO _globalConfig;
+
+        private readonly SyncDictionary<int, int> _playerColorIndexes = new(); 
         
         private Dictionary<int, PlayerInfo> _playerData = new ();
         private string _sessionId;
         private Stack<int> _availableColors;
-        private List<int> _clientIds = new(); //List to track the order players joined / who gets host next
+        private readonly List<int> _clientIds = new(); //List to track the order players joined / who gets host next
         private int _hostId = -1;
 
         
@@ -31,7 +34,7 @@ namespace DiceyParty
             _instance = this;
             _availableColors = new Stack<int>(Enumerable.Range(0, _globalConfig.MaxPlayerCount).Reverse());
         }
-    
+
         public static void SetSessionId(string sessionId)
         {
             _instance.CheckIfServer();
@@ -63,8 +66,12 @@ namespace DiceyParty
                 _hostId = clientId;
                 player.SetIsHost(true);
             }
+
+            _playerColorIndexes.Add(clientId, colorIndex);
+            
             return player;
         }
+        
 
         public static PlayerInfo RemovePlayerInfo(int clientId) => _instance.HandleRemovePlayerInfo(clientId);
         
@@ -87,6 +94,9 @@ namespace DiceyParty
             }
             
             _hostId = -1;
+            
+            _playerColorIndexes.Remove(clientId);
+            
             return null;
         }
         
@@ -120,6 +130,14 @@ namespace DiceyParty
             if (!IsServerInitialized)
                 throw new Exception("This method can not be called on the client");
         }
+
+
+        public static int GetPlayerColorIndexAsClient(int clientId) => _instance.HandleGetPlayerColorIndexAsClient(clientId);
+
+        private int HandleGetPlayerColorIndexAsClient(int clientId)
+        {
+            return _playerColorIndexes[clientId];
+        }
     }
     
     public class PlayerInfo
@@ -128,6 +146,8 @@ namespace DiceyParty
         public int ColorIndex { get; private set; }
         public int ClientId { get; private set; }
         public bool IsHost { get; private set; }
+        
+        public PlayerInfo(){}
 
         public PlayerInfo(string playerName, int colorIndex, int clientId)
         {

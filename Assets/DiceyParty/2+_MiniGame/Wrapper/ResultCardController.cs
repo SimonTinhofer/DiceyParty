@@ -14,11 +14,12 @@ namespace DiceyParty.MiniGame
 
         private ResultCardInfo _resultCardInfo;
 
-        public void Setup(ResultCardInfo resultCardInfo, int clientID)
+        public void Setup(ResultCardInfo resultCardInfo, int clientId)
         {
             _resultCardInfo = resultCardInfo;
             _name.text = resultCardInfo.Name;
-            _image.color = _globalConfig.Colors[clientID];
+            int colorIndex = SessionDataSystem.GetPlayerColorIndexAsClient(clientId);
+            _image.color = _globalConfig.Colors[colorIndex];
             _placement.text = $"{resultCardInfo.Placement + 1}.";
         }
 

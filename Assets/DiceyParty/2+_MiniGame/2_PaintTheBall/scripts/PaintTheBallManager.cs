@@ -1,27 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using FishNet.Connection;
 using FishNet.Managing.Scened;
 using FishNet.Object;
+using FishNet.Object.Synchronizing;
 using UnityEngine;
 
 namespace DiceyParty.MiniGame.PaintTheBall
 {
     public class PaintTheBallManager : NetworkBehaviour
     {
-        private readonly Dictionary<int, int> _placements = new();
-        private int _playerCount;
+        public static Action<bool> TogglePlayerControls;
+        
+        private readonly HashSet<int> _readyPlayers = new();
+        private readonly SyncVar<int> _playerCount = new SyncVar<int>();
 
         [SerializeField] private GameObject _playerPrefab;
         [SerializeField] private GameConfigSO _gameConfig;
-        
+        private int _clientId;
 
 
         public override void OnStartServer()
         {
             base.OnStartServer();
             SceneManager.OnClientPresenceChangeEnd += SpawnPlayer;
-            _playerCount = SessionDataSystem.GetPlayerCount();
-            
+            _playerCount.Value = SessionDataSystem.GetPlayerCount();
+        }
+
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+
+            _clientId = ClientManager.Connection.ClientId;
             MiniGameManager.OnStartGamePhase += OnStartGamePhase;
         }
 
@@ -35,23 +46,42 @@ namespace DiceyParty.MiniGame.PaintTheBall
 
         private void OnDestroy()
         {
-            SceneManager.OnClientPresenceChangeEnd += SpawnPlayer;
+            SceneManager.OnClientPresenceChangeEnd -= SpawnPlayer;
             MiniGameManager.OnStartGamePhase -= OnStartGamePhase;
+            TogglePlayerControls = null;
         }
 
         private void OnStartGamePhase()
         {
-            
+            UIManager.StartTimer(_gameConfig.GameDuration);
+            WaitGameDuration();
+            TogglePlayerControls.Invoke(true);
         }
-        
+
+        private async void WaitGameDuration()
+        {
+            await Awaitable.WaitForSecondsAsync(_gameConfig.GameDuration);
+            TogglePlayerControls.Invoke(false);
+            FinishedGamePhase(_clientId);
+        }
+
         [ServerRpc (RequireOwnership = false)] 
         private void FinishedGamePhase(int clientId)
         {
-            _placements.Add(clientId, _placements.Count);
-            if (_placements.Count == _playerCount)
+            _readyPlayers.Add(clientId);
+            if (_readyPlayers.Count == _playerCount.Value)
             {
-                MiniGameManager.FinishedGamePhase(_placements);
+                var placements = CalculatePlacements();
+                MiniGameManager.FinishedGamePhase(placements);
             }
+        }
+
+        private Dictionary<int, int> CalculatePlacements()
+        {
+            var playerTriCount = TriangleManager.GetPlayerTriangleCount();
+            IOrderedEnumerable<KeyValuePair<int, int>> orderedPlayerTriCount = playerTriCount.OrderByDescending(entry => entry.Value);
+            Dictionary<int, int> placements = orderedPlayerTriCount.Select((pair, index) => new { pair.Key, Rank = index }).ToDictionary(pair => pair.Key, pair => pair.Rank);
+            return placements;
         }
     }
 }

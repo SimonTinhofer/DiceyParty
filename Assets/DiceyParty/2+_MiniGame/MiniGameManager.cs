@@ -16,7 +16,7 @@ namespace DiceyParty.MiniGame
 
         [SerializeField] MiniGameResultsProcessor _resultsProcessor;
         [SerializeField] private MiniGameWrapper _miniGameWrapper;
-        private int _clientID;
+        private int _clientId;
 
         public static void FinishedGamePhase(Dictionary<int, int> placements) =>
             _instance.HandleFinishedGamePhase(placements);
@@ -42,7 +42,7 @@ namespace DiceyParty.MiniGame
 
         public override void OnStartClient()
         {
-            _clientID = ClientManager.Connection.ClientId;
+            _clientId = ClientManager.Connection.ClientId;
             base.OnStartClient();
             StartTutorialPhase();
         }
@@ -50,7 +50,7 @@ namespace DiceyParty.MiniGame
         private async void StartTutorialPhase()
         {
             await _miniGameWrapper.TutorialPhase();
-            ClientFinishedTutorialPhase(_clientID);
+            ClientFinishedTutorialPhase(_clientId);
         }
 
         #region TutorialPhase
@@ -107,7 +107,7 @@ namespace DiceyParty.MiniGame
         private async void PlayOutResultPhase(Dictionary<int, ResultCardInfo> resultCardData)
         {
             await _miniGameWrapper.ResultsPhase(resultCardData);
-            ClientFinishedResultPhase(_clientID);
+            ClientFinishedResultPhase(_clientId);
         }
         
         [ServerRpc (RequireOwnership = false)]

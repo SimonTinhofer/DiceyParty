@@ -10,7 +10,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         private int _clientId;
         private float _startTime;
         
-        private int[] _playerTriangleCount;
+        private Dictionary<int, int> _playerTriangleCount = new();
         private Dictionary<int, IcoTriangle> _claimedTriangles = new();
         
         private static TriangleManager _instance;
@@ -31,13 +31,13 @@ namespace DiceyParty.MiniGame.PaintTheBall
             base.OnStartClient();
             _clientId = ClientManager.Connection.ClientId;
             _startTime = Time.time;
+            AddPlayerTriangleCount(_clientId);
         }
 
-        public override void OnStartServer()
+        [ServerRpc (RequireOwnership = false)]
+        private void AddPlayerTriangleCount(int clientId)
         {
-            base.OnStartServer();
-            int playerCount = SessionDataSystem.GetPlayerCount();
-            _playerTriangleCount = new int[playerCount];
+            _playerTriangleCount.Add(clientId, 0);
         }
 
 
@@ -56,7 +56,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         }
         
         [ServerRpc(RequireOwnership = false)]
-        public void OnHitTriangleServer(List<IcoTriangle> hitTriangles)
+        private void OnHitTriangleServer(List<IcoTriangle> hitTriangles)
         {
             List<IcoTriangle> relevantHits = new();
             foreach (IcoTriangle triangle in hitTriangles)
@@ -80,11 +80,16 @@ namespace DiceyParty.MiniGame.PaintTheBall
         
 
         [ObserversRpc]
-        private void HandleTriangleHitObserver(List<IcoTriangle> hitTriangles, int[] playerTriangleCount)
+        private void HandleTriangleHitObserver(List<IcoTriangle> hitTriangles, Dictionary<int, int> playerTriangleCount)
         {
             if (hitTriangles[0].Owner != _clientId)
                 _triangleHandler.RequestColorChange(hitTriangles);
-            /*UpdateScoreboard(playerTriangleCount);*/
+            UIManager.UpdateScoreboard(playerTriangleCount);
+        }
+
+        public static Dictionary<int, int> GetPlayerTriangleCount()
+        {
+            return _instance._playerTriangleCount;
         }
     }
 }

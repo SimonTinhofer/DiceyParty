@@ -1,3 +1,4 @@
+using System;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,11 +12,11 @@ namespace DiceyParty.MiniGame.PaintTheBall
         private float _ringAngleDeg;
         private float _pitch;
         private InputAction _moveAction;
+        private bool _controlsEnabled;
 
         public override void OnStartClient()
         {
             base.OnStartClient();
-            Debug.Log("StartClient");
             if (!IsOwner)
             {
                 enabled = false;
@@ -28,11 +29,23 @@ namespace DiceyParty.MiniGame.PaintTheBall
             cam.transform.position = transform.position;
             cam.transform.rotation = transform.rotation;
             cam.transform.parent = _bodyTransform;
+
+            PaintTheBallManager.TogglePlayerControls += ToggleControls;
+        }
+
+        private void OnDestroy()
+        {
+            PaintTheBallManager.TogglePlayerControls -= ToggleControls;
+        }
+
+        private void ToggleControls(bool toggle)
+        {
+            _controlsEnabled = toggle;
         }
 
         private void Update()
         {
-            if (!IsOwner) return;
+            if (!_controlsEnabled) return;
             
             Vector2 moveInput = _moveAction.ReadValue<Vector2>();
             float deltaPitch = -_gameConfig.LookSpeed * Time.deltaTime * moveInput.y;
