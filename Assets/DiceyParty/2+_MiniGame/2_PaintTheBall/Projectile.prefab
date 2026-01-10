@@ -152,4 +152,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9138d47dab828d347a88aac6023bf85a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.MiniGame.PaintTheBall::DiceyParty.MiniGame.PaintTheBall.ProjectileLogic
-  _gameConfig: {fileID: 11400000, guid: 1f030f25e74027d43aa44fb53ed00aed, type: 2}
+  _paintTheBallConfig: {fileID: 11400000, guid: 1f030f25e74027d43aa44fb53ed00aed, type: 2}

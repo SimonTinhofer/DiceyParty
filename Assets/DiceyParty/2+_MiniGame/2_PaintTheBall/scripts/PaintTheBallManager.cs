@@ -17,7 +17,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         private readonly SyncVar<int> _playerCount = new SyncVar<int>();
 
         [SerializeField] private GameObject _playerPrefab;
-        [SerializeField] private GameConfigSO _gameConfig;
+        [SerializeField] private PaintTheBallConfigSO _paintTheBallConfig;
         private int _clientId;
 
 
@@ -39,7 +39,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         private void SpawnPlayer(ClientPresenceChangeEventArgs args)
         {
             NetworkConnection conn = args.Connection;
-            NetworkObject nob = NetworkManager.GetPooledInstantiated(_playerPrefab, new Vector3(0, 1, -_gameConfig.Radius), Quaternion.identity, true);
+            NetworkObject nob = NetworkManager.GetPooledInstantiated(_playerPrefab, new Vector3(0, 1, -_paintTheBallConfig.Radius), Quaternion.identity, true);
             NetworkManager.ServerManager.Spawn(nob, conn);
         }
 
@@ -53,14 +53,14 @@ namespace DiceyParty.MiniGame.PaintTheBall
 
         private void OnStartGamePhase()
         {
-            UIManager.StartTimer(_gameConfig.GameDuration);
+            UIManager.StartTimer(_paintTheBallConfig.GameDuration);
             WaitGameDuration();
             TogglePlayerControls.Invoke(true);
         }
 
         private async void WaitGameDuration()
         {
-            await Awaitable.WaitForSecondsAsync(_gameConfig.GameDuration);
+            await Awaitable.WaitForSecondsAsync(_paintTheBallConfig.GameDuration);
             TogglePlayerControls.Invoke(false);
             FinishedGamePhase(_clientId);
         }

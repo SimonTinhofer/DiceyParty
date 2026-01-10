@@ -7,7 +7,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
 {
     public class TriangleHandler : MonoBehaviour
     {
-        [SerializeField] private GameConfigSO _gameConfig;
+        [SerializeField] private PaintTheBallConfigSO _paintTheBallConfig;
         [SerializeField] private GlobalConfigSO _globalConfig;
 
         private Mesh _mesh;

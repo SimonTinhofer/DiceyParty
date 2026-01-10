@@ -68,6 +68,7 @@ namespace DiceyParty.MiniGame
             if (_readyPlayers.Count != _playerCount) return;
             
             _currentPhase = MiniGamePhase.GamePhase;
+            OnStartGamePhase?.Invoke();
             StartGamePhaseObservers();
             _readyPlayers.Clear();
         }

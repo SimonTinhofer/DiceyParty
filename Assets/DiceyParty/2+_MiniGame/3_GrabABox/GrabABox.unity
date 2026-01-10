@@ -150,6 +150,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7701357645558512064}
+  - {fileID: 1064235412}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &208692287
@@ -474,25 +475,6 @@ Transform:
   - {fileID: 1075093099}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &546381617 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 899053859657256450, guid: 1471752b7157b2745978328bb8b6a2a4, type: 3}
-  m_PrefabInstance: {fileID: 4545923555171672600}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &546381619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 546381617}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a36159fdf64ac349a0a62c4a7490b65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  _gameplayCamera: {fileID: 0}
-  _gameplayViewRect: {fileID: 0}
 --- !u!1 &607279905
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,6 +590,73 @@ Transform:
   m_Children: []
   m_Father: {fileID: 607279906}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1064235411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1064235412}
+  - component: {fileID: 1064235413}
+  - component: {fileID: 1064235414}
+  m_Layer: 0
+  m_Name: GrabABoxManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1064235412
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064235411}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 208692286}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1064235413
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064235411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d30f8b88d674441894ce71da3cb2e198, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty.MiniGame.GrabABox::DiceyParty.MiniGame.GrabABox.SpawningManager
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 208692287}
+  _networkObjectCache: {fileID: 0}
+  _gameConfig: {fileID: 11400000, guid: 4112f4fb05c2e8147a9caa8136c86e90, type: 2}
+  _playerPrefab: {fileID: 1988249066123317977, guid: d85a39fdba27b0d4991aa5f45034e43e, type: 3}
+  _boxPrefab: {fileID: 2447088548106984001, guid: ea02646b36bb7de4ba5ddbcad26350b8, type: 3}
+--- !u!114 &1064235414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1064235411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c9047cff48d40fa949a963bb6d3a45a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty.MiniGame.GrabABox::DiceyParty.MiniGame.GrabABox.GrabABoxManager
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 208692287}
+  _networkObjectCache: {fileID: 0}
+  _gameSpawner: {fileID: 1064235413}
 --- !u!1 &1075093098
 GameObject:
   m_ObjectHideFlags: 0
@@ -620,7 +669,7 @@ GameObject:
   - component: {fileID: 1075093102}
   - component: {fileID: 1075093101}
   - component: {fileID: 1075093100}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -967,10 +1016,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3439540561178001379, guid: 1471752b7157b2745978328bb8b6a2a4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9062260169045642190}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 899053859657256450, guid: 1471752b7157b2745978328bb8b6a2a4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 546381619}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1471752b7157b2745978328bb8b6a2a4, type: 3}
 --- !u!4 &4545923555171672601 stripped
 Transform:

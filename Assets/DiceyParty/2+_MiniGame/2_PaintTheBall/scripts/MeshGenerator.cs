@@ -6,16 +6,16 @@ namespace DiceyParty.MiniGame.PaintTheBall
 {
     public class MeshGenerator : MonoBehaviour
     {
-        [SerializeField] private GameConfigSO _gameConfig;
+        [SerializeField] private PaintTheBallConfigSO _paintTheBallConfig;
         
         void OnValidate()
         {
             MeshFilter mf = GetComponent<MeshFilter>();
             MeshCollider mc = GetComponent<MeshCollider>();
-            Mesh mesh = CreateTriangleSphere(_gameConfig.IcoSpereSubdivisionLevel);
+            Mesh mesh = CreateTriangleSphere(_paintTheBallConfig.IcoSpereSubdivisionLevel);
             mf.mesh = mesh;
             mc.sharedMesh = mesh;
-            transform.localScale = new Vector3(_gameConfig.IcoSphereScale, _gameConfig.IcoSphereScale, _gameConfig.IcoSphereScale); 
+            transform.localScale = new Vector3(_paintTheBallConfig.IcoSphereScale, _paintTheBallConfig.IcoSphereScale, _paintTheBallConfig.IcoSphereScale); 
         }
 
         Mesh CreateTriangleSphere(int subdivisions)

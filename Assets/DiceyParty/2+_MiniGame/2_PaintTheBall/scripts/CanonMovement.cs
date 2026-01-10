@@ -7,7 +7,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
 {
     public class CanonMovement : NetworkBehaviour
     {
-        [SerializeField] GameConfigSO _gameConfig;
+        [SerializeField] PaintTheBallConfigSO _paintTheBallConfig;
         [SerializeField] Transform _bodyTransform;
         private float _ringAngleDeg;
         private float _pitch;
@@ -48,15 +48,15 @@ namespace DiceyParty.MiniGame.PaintTheBall
             if (!_controlsEnabled) return;
             
             Vector2 moveInput = _moveAction.ReadValue<Vector2>();
-            float deltaPitch = -_gameConfig.LookSpeed * Time.deltaTime * moveInput.y;
+            float deltaPitch = -_paintTheBallConfig.LookSpeed * Time.deltaTime * moveInput.y;
             _pitch += deltaPitch;
-            _pitch = Mathf.Clamp(_pitch, -_gameConfig.MaxPitch, _gameConfig.MaxPitch);
+            _pitch = Mathf.Clamp(_pitch, -_paintTheBallConfig.MaxPitch, _paintTheBallConfig.MaxPitch);
 
             if(Mathf.Abs(moveInput.x) > 0.1)
-                _ringAngleDeg += moveInput.x * _gameConfig.AngleSpeed * Time.deltaTime;
+                _ringAngleDeg += moveInput.x * _paintTheBallConfig.AngleSpeed * Time.deltaTime;
 
-            transform.position = new Vector3(Mathf.Cos(Mathf.Deg2Rad * _ringAngleDeg) * _gameConfig.Radius, 1, Mathf.Sin(Mathf.Deg2Rad * _ringAngleDeg) * _gameConfig.Radius);
-            _bodyTransform.localRotation = Quaternion.Euler(_pitch, _gameConfig.RotationOffset.y - _ringAngleDeg, 0f);
+            transform.position = new Vector3(Mathf.Cos(Mathf.Deg2Rad * _ringAngleDeg) * _paintTheBallConfig.Radius, 1, Mathf.Sin(Mathf.Deg2Rad * _ringAngleDeg) * _paintTheBallConfig.Radius);
+            _bodyTransform.localRotation = Quaternion.Euler(_pitch, _paintTheBallConfig.RotationOffset.y - _ringAngleDeg, 0f);
         }
     }
 }

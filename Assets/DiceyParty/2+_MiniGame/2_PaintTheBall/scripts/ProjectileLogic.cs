@@ -6,7 +6,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
 {
     public class ProjectileLogic : MonoBehaviour
     {
-        [SerializeField] private GameConfigSO _gameConfig;
+        [SerializeField] private PaintTheBallConfigSO _paintTheBallConfig;
 
         private void OnCollisionEnter(Collision collision)
         {
@@ -15,7 +15,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
             if (painter != null)
             {
                 ContactPoint contact = collision.contacts[0];
-                painter.DetectHitTriangles(contact.point, _gameConfig.PaintRadius);
+                painter.DetectHitTriangles(contact.point, _paintTheBallConfig.PaintRadius);
             }
 
             Destroy(gameObject); // Projektil entfernen

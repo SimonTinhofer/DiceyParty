@@ -1,0 +1,19 @@
+{
+    "name": "DiceyParty.MiniGame.GrabABox",
+    "rootNamespace": "",
+    "references": [
+        "FishNet.Runtime",
+        "DiceyParty.MiniGame",
+        "Unity.InputSystem",
+        "DiceyParty"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -4,8 +4,8 @@ using UnityEngine;
 
 namespace DiceyParty.MiniGame.PaintTheBall
 {
-    [CreateAssetMenu(fileName = "MiniGame3Config", menuName = "Scriptable Objects/MiniGame3 Config")]
-    public class GameConfigSO : ScriptableObject
+    [CreateAssetMenu(fileName = "PaintTheBallConfig", menuName = "Scriptable Objects/PaintTheBall Config")]
+    public class PaintTheBallConfigSO : ScriptableObject
     {
         public int IcoSpereSubdivisionLevel = 2;
         public float IcoSphereScale = 5;

@@ -398,25 +398,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d44883963aecbc044acc4345b6224981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.Menu::DiceyParty.Menu.SessionSystemSpawner
---- !u!1 &546381617 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 899053859657256450, guid: 1471752b7157b2745978328bb8b6a2a4, type: 3}
-  m_PrefabInstance: {fileID: 4545923555171672600}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &546381619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 546381617}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a36159fdf64ac349a0a62c4a7490b65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  _gameplayCamera: {fileID: 0}
-  _gameplayViewRect: {fileID: 0}
 --- !u!1 &607279905
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,6 +727,14 @@ PrefabInstance:
 
 '
       objectReference: {fileID: 0}
+    - target: {fileID: 4213999890461493577, guid: 1471752b7157b2745978328bb8b6a2a4, type: 3}
+      propertyPath: _gameplayCamera
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4213999890461493577, guid: 1471752b7157b2745978328bb8b6a2a4, type: 3}
+      propertyPath: _gameplayViewRect
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6086709977676063955, guid: 1471752b7157b2745978328bb8b6a2a4, type: 3}
       propertyPath: m_ReferencePixelsPerUnit
       value: 100
@@ -875,10 +864,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3439540561178001379, guid: 1471752b7157b2745978328bb8b6a2a4, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1713896611}
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 899053859657256450, guid: 1471752b7157b2745978328bb8b6a2a4, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 546381619}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1471752b7157b2745978328bb8b6a2a4, type: 3}
 --- !u!4 &4545923555171672601 stripped
 Transform:

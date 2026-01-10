@@ -12,7 +12,9 @@ GameObject:
   - component: {fileID: 8933238796033886542}
   - component: {fileID: 8675028551589224432}
   - component: {fileID: 2166512681099274915}
-  - component: {fileID: 7737179570734151137}
+  - component: {fileID: 2736192729957900211}
+  - component: {fileID: -371714691299881891}
+  - component: {fileID: -8894693302281409208}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -78,10 +80,10 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 0}
   - {fileID: 2166512681099274915}
+  - {fileID: 2736192729957900211}
+  - {fileID: -371714691299881891}
   - {fileID: 4769960670750985769}
-  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -92,7 +94,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584335477658944578
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -107,9 +109,9 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 12
+  <PrefabId>k__BackingField: 0
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 9291735036742442690
+  <AssetPathHash>k__BackingField: 2725311407598525172
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: 0, y: 0, z: 0}
@@ -128,7 +130,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 1
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 8675028551589224432}
   _networkObjectCache: {fileID: 8675028551589224432}
   _componentConfiguration: 0
@@ -162,36 +164,59 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
---- !u!114 &7737179570734151137
+--- !u!114 &2736192729957900211
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988249066123317977}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Script: {fileID: 11500000, guid: 23da681ccc624382a779fa6466b813f5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: -944628639613478452, guid: 719cdd1c3544b444aa83b9b05872b562, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: 
-  m_DefaultActionMap: Actions
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
+  m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.OwnerColor
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: 8675028551589224432}
+  _networkObjectCache: {fileID: 8675028551589224432}
+  _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}
+  _renderer: {fileID: 27075785575855567}
+--- !u!114 &-371714691299881891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988249066123317977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b77cb2a4975242b091ceffce7e0e679b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty.MiniGame.GrabABox::DiceyParty.MiniGame.GrabABox.PointerWaypointMovment
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 8675028551589224432}
+  _networkObjectCache: {fileID: 8675028551589224432}
+  _speed: 5
+  _planeMask:
+    serializedVersion: 2
+    m_Bits: 8
+  _body: {fileID: 8285917496058467990}
+--- !u!114 &-8894693302281409208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988249066123317977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8da26cb9e7b248b9ad93a1c5345c099e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty.MiniGame.GrabABox::DiceyParty.MiniGame.GrabABox.CollisionHandler
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8675028551589224432}
+  _networkObjectCache: {fileID: 0}
+  _collider: {fileID: 8933238796033886542}
 --- !u!1 &2436615708676698802
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,7 +441,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 2
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 8675028551589224432}
   _networkObjectCache: {fileID: 8675028551589224432}
   _componentConfiguration: 0

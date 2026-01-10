@@ -392,9 +392,9 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 0}
-  - {fileID: 0}
   - {fileID: 2328730076883576765}
+  - {fileID: 4339896275601350105}
+  - {fileID: 2141820247989210251}
   - {fileID: 5917591677193686609}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
@@ -406,7 +406,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584335512360170539
   NetworkObserver: {fileID: 1928751564627008983}
   _enablePrediction: 0
   _predictionType: 0
@@ -421,7 +421,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 11
+  <PrefabId>k__BackingField: 14
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 14367225976597206577
   SceneId: 0
@@ -458,7 +458,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _componentIndexCache: 2
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 2269828299578378790}
   _networkObjectCache: {fileID: 2269828299578378790}
   _componentConfiguration: 0
@@ -504,10 +504,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 100927209eb8b3047a1c6c3942451f20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.MiniGame.PaintTheBall::DiceyParty.MiniGame.PaintTheBall.CanonMovement
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 2269828299578378790}
-  _networkObjectCache: {fileID: 0}
-  _gameConfig: {fileID: 11400000, guid: 1f030f25e74027d43aa44fb53ed00aed, type: 2}
+  _networkObjectCache: {fileID: 2269828299578378790}
+  _paintTheBallConfig: {fileID: 11400000, guid: 1f030f25e74027d43aa44fb53ed00aed, type: 2}
   _bodyTransform: {fileID: 482260480667993531}
 --- !u!114 &2141820247989210251
 MonoBehaviour:
@@ -521,9 +521,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab9164b9bd5ca03409a5401d57da3753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.MiniGame.PaintTheBall::DiceyParty.MiniGame.PaintTheBall.ShootingControls
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 2269828299578378790}
-  _networkObjectCache: {fileID: 0}
-  _gameConfig: {fileID: 11400000, guid: 1f030f25e74027d43aa44fb53ed00aed, type: 2}
+  _networkObjectCache: {fileID: 2269828299578378790}
+  _paintTheBallConfig: {fileID: 11400000, guid: 1f030f25e74027d43aa44fb53ed00aed, type: 2}
   _projectilePrefab: {fileID: 5232454815669328856, guid: 4ee60e2db91b90c48a9a0dc3532dd251, type: 3}
   _projectileSpawnPoint: {fileID: 1207979242177345075}
