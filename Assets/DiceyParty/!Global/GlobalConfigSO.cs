@@ -1,20 +1,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GlobalConfigSO", menuName = "Scriptable Objects/GlobalConfig")]
-public class GlobalConfigSO : ScriptableObject
+namespace DiceyParty
 {
-    public int MaxPlayerCount = 6;
-    public Color[] Colors =
+    [CreateAssetMenu(fileName = "GlobalConfigSO", menuName = "Scriptable Objects/GlobalConfig")]
+    public class GlobalConfigSO : ScriptableObject
     {
-        Color.red,
-        Color.green,
-        Color.blue,
-        Color.yellow,
-        Color.magenta,
-        Color.cyan
-    };
+        public int MaxPlayerCount = 6;
+        public Color[] Colors =
+        {
+            Color.red,
+            Color.green,
+            Color.blue,
+            Color.yellow,
+            Color.magenta,
+            Color.cyan
+        };
 
-    public float TutorialDuration = 2;
-    public float ResultsDuration = 2;
+        public float TutorialDuration = 2;
+        public float ResultsDuration = 2;
+    }
 }

@@ -13,7 +13,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         [SerializeField] private Transform _projectileSpawnPoint;       
         private bool _onCooldown;
         private InputAction _fireAction;
-        private bool _controlsEnabled;
+        private bool _shootingEnabled;
 
         public override void OnStartClient()
         {
@@ -22,37 +22,32 @@ namespace DiceyParty.MiniGame.PaintTheBall
 
             _fireAction = InputSystem.actions.FindAction("Attack");
 
-            PaintTheBallManager.TogglePlayerControls += ToggleControls;
+            PaintTheBallManager.TogglePlayerControls += ToggleShooting;
         }
         
         private void OnDestroy()
         {
-            PaintTheBallManager.TogglePlayerControls -= ToggleControls;
+            PaintTheBallManager.TogglePlayerControls -= ToggleShooting;
         }
 
-        private void ToggleControls(bool toggle)
+        private void ToggleShooting(bool toggle)
         {
-            _controlsEnabled = toggle;
+            _shootingEnabled = toggle;
+            if(toggle)
+                StartShooting();
         }
 
 
-        private void Update()
+        private async void StartShooting()
         {
-            if (!_controlsEnabled) return;
-            
-            if (_fireAction.IsPressed() & !_onCooldown)
+            while (_shootingEnabled)
             {
-                _onCooldown = true;
                 ShootProjectile();
-                ResetCooldown();
+                await Awaitable.WaitForSecondsAsync(_gameConfig.ShootingCooldown);
             }
         }
 
-        private async void ResetCooldown()
-        {
-            await Awaitable.WaitForSecondsAsync(_gameConfig.ShootingCooldown);
-            _onCooldown = false;
-        }
+
 
         private void ShootProjectile()
         {

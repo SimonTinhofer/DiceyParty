@@ -9,13 +9,12 @@ namespace DiceyParty
 {
     public class SessionDataSystem : NetworkBehaviour
     {
-        private static SessionDataSystem _instance;
+        public static SessionDataSystem Instance;
         [SerializeField] private GlobalConfigSO _globalConfig;
 
-        private readonly SyncDictionary<int, int> _playerColorIndexes = new(); 
+        private readonly SyncDictionary<int, PlayerInfo> _playerData = new();
+        private readonly SyncVar<string> _sessionId = new();
         
-        private Dictionary<int, PlayerInfo> _playerData = new ();
-        private string _sessionId;
         private Stack<int> _availableColors;
         private readonly List<int> _clientIds = new(); //List to track the order players joined / who gets host next
         private int _hostId = -1;
@@ -24,58 +23,50 @@ namespace DiceyParty
 
         private void Awake()
         {
-            if (_instance != null)
+            if (Instance != null)
             {
                 Debug.LogWarning("there should only be one instantiated objects of this class in a scene");
                 Destroy(this.gameObject);
                 return;
             }
         
-            _instance = this;
+            Instance = this;
             _availableColors = new Stack<int>(Enumerable.Range(0, _globalConfig.MaxPlayerCount).Reverse());
         }
-
-        public static void SetSessionId(string sessionId)
-        {
-            _instance.CheckIfServer();
-            _instance._sessionId = sessionId;
-        }
-
-        public static string GetSessionId()
-        {
-            return _instance._sessionId;
-        }
-
-        public static PlayerInfo GetPlayerInfo(int clientId) => _instance.HandleGetPlayerInfo(clientId);
         
-        private PlayerInfo HandleGetPlayerInfo(int clientId)
+        public void SetSessionId(string sessionId)
         {
             CheckIfServer();
-            return _playerData.TryGetValue(clientId, out var info) ? info : CreatePlayerInfo(clientId);
+            _sessionId.Value = sessionId;
         }
 
-        private PlayerInfo CreatePlayerInfo(int clientId)
+        public string GetSessionId()
         {
+            return _sessionId.Value;
+        }
+
+        public PlayerInfo CreatePlayerInfo(int clientId)
+        {
+            CheckIfServer();
+
+            if (_playerData.TryGetValue(clientId, out var info)) return info;
+                
             string playerName = $"Player{clientId}";
             int colorIndex = _availableColors.Pop();
             var player = new PlayerInfo(playerName, colorIndex, clientId);
             _playerData.Add(clientId, player);
+
             _clientIds.Add(clientId);
             if (_hostId == -1)
             {
                 _hostId = clientId;
                 player.SetIsHost(true);
             }
-
-            _playerColorIndexes.Add(clientId, colorIndex);
             
             return player;
         }
         
-
-        public static PlayerInfo RemovePlayerInfo(int clientId) => _instance.HandleRemovePlayerInfo(clientId);
-        
-        private PlayerInfo HandleRemovePlayerInfo(int clientId)
+        public PlayerInfo RemovePlayerInfo(int clientId)
         {
             CheckIfServer();
             
@@ -95,75 +86,27 @@ namespace DiceyParty
             
             _hostId = -1;
             
-            _playerColorIndexes.Remove(clientId);
-            
             return null;
         }
         
-        public static PlayerInfo UpdateName(string newName, int clientId) => _instance.HandleUpdateName(newName, clientId);
-
-        private PlayerInfo HandleUpdateName(string newName, int clientId)
+        public PlayerInfo UpdateName(string newName, int clientId)
         {
             CheckIfServer();
             _playerData[clientId].SetName(newName);
+            _playerData.Dirty(clientId);
             return _playerData[clientId];
         }
-
-        public static int GetPlayerCount() => _instance.HandleGetPlayerCount();
-
-        private int HandleGetPlayerCount()
+        
+        public Dictionary<int, PlayerInfo> GetPlayerData()
         {
-            CheckIfServer();
-            return _playerData.Count;
+            var pD = _playerData.GetCollection(false);
+            return pD;
         }
-
-        public static Dictionary<int, PlayerInfo> GetPlayerData() => _instance.HandleGetPlayerData();
-
-        private Dictionary<int, PlayerInfo> HandleGetPlayerData()
-        {
-            CheckIfServer();
-            return _playerData;
-        }
-
+        
         private void CheckIfServer()
         {
             if (!IsServerInitialized)
                 throw new Exception("This method can not be called on the client");
-        }
-
-
-        public static int GetPlayerColorIndexAsClient(int clientId) => _instance.HandleGetPlayerColorIndexAsClient(clientId);
-
-        private int HandleGetPlayerColorIndexAsClient(int clientId)
-        {
-            return _playerColorIndexes[clientId];
-        }
-    }
-    
-    public class PlayerInfo
-    {
-        public string PlayerName { get; private set; }
-        public int ColorIndex { get; private set; }
-        public int ClientId { get; private set; }
-        public bool IsHost { get; private set; }
-        
-        public PlayerInfo(){}
-
-        public PlayerInfo(string playerName, int colorIndex, int clientId)
-        {
-            PlayerName = playerName;
-            ColorIndex = colorIndex;
-            ClientId = clientId;
-        }
-
-        public void SetIsHost(bool toggle)
-        {
-            IsHost = toggle;
-        }
-
-        public void SetName(string newName)
-        {
-            PlayerName = newName;
         }
     }
 }

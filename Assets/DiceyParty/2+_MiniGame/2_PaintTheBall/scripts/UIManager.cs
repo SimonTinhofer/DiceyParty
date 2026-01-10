@@ -43,7 +43,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         private void CreateScoreboardComponents(int clientId)
         {
             var s = Instantiate(_scoreBoardComponentPrefab, _scoreBoardTransform).GetComponent<ScoreboardComponentController>();
-            int colorIndex = SessionDataSystem.GetPlayerColorIndexAsClient(clientId);
+            int colorIndex = SessionDataSystem.Instance.GetPlayerData()[clientId].ColorIndex;
             s.SetColor(_globalConfig.Colors[colorIndex]);
             _scoreControllers.Add(clientId, s);
         }

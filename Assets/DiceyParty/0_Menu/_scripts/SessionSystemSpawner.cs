@@ -41,7 +41,7 @@ namespace DiceyParty.Menu
         [ServerRpc (RequireOwnership = false)]
         private void StartSession(string sessionId)
         {
-            SessionDataSystem.SetSessionId(sessionId);
+            SessionDataSystem.Instance.SetSessionId(sessionId);
             SessionStageSystem.ChangeState(SessionStage.Lobby);
         }
 
@@ -49,7 +49,7 @@ namespace DiceyParty.Menu
         {
             if (!IsServerInitialized) throw new Exception("method must only be called on the server");
             
-            SessionDataSystem.SetSessionId("test");
+            SessionDataSystem.Instance.SetSessionId("test");
             SessionStageSystem.ChangeState(SessionStage.Lobby);
 
         }

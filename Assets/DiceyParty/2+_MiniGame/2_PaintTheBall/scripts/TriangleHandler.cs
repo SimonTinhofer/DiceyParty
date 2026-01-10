@@ -60,7 +60,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
             var colors = _mesh.colors;
             foreach (IcoTriangle triangle in trianglesToColor)
             {
-                int colorIndex = SessionDataSystem.GetPlayerColorIndexAsClient(triangle.Owner);
+                int colorIndex = SessionDataSystem.Instance.GetPlayerData()[triangle.Owner].ColorIndex;
                 Color color = _globalConfig.Colors[colorIndex];
 
                 for(int i = 0; i < triangle.VerticeIndexes.Length; i++)

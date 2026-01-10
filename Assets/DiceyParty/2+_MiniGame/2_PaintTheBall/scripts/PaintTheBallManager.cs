@@ -25,7 +25,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         {
             base.OnStartServer();
             SceneManager.OnClientPresenceChangeEnd += SpawnPlayer;
-            _playerCount.Value = SessionDataSystem.GetPlayerCount();
+            _playerCount.Value = SessionDataSystem.Instance.GetPlayerData().Count;
         }
 
         public override void OnStartClient()

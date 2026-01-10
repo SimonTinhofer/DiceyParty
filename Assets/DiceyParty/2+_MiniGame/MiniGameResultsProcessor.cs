@@ -10,7 +10,7 @@ namespace DiceyParty.MiniGame
         public Dictionary<int, ResultCardInfo> ProcessResults(Dictionary<int, int> placements)
         {
             Dictionary<int, ResultCardInfo> resultCardData = new();
-            Dictionary<int, PlayerInfo> playerData = SessionDataSystem.GetPlayerData();
+            Dictionary<int, PlayerInfo> playerData = SessionDataSystem.Instance.GetPlayerData();
             foreach (var entry in placements)
             {
                 int clientId = entry.Key;

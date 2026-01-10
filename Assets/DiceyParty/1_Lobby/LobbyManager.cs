@@ -29,7 +29,7 @@ namespace DiceyParty.Lobby
         public override void OnStartServer()
         {
             base.OnStartServer();
-            string sessionId = SessionDataSystem.GetSessionId();
+            string sessionId = SessionDataSystem.Instance.GetSessionId();
             ObserverSetSessionId(sessionId);
 
             SceneManager.OnClientPresenceChangeEnd += OnClientPresenceChangeEnd;
@@ -40,7 +40,7 @@ namespace DiceyParty.Lobby
         {
             NetworkConnection conn = args.Connection;
             int clientId = conn.ClientId;
-            PlayerInfo playerInfo = SessionDataSystem.GetPlayerInfo(clientId);
+            PlayerInfo playerInfo = SessionDataSystem.Instance.CreatePlayerInfo(clientId);
             
             NetworkObject nob = NetworkManager.GetPooledInstantiated(_playerCardPrefab, true);
             NetworkManager.ServerManager.Spawn(nob, conn);
@@ -82,7 +82,7 @@ namespace DiceyParty.Lobby
         private void ServerLeaveSession(int clientId, NetworkConnection conn)
         {
             Debug.Log("Removing Player Info");
-            var updatePlayerInfo = SessionDataSystem.RemovePlayerInfo(clientId);
+            var updatePlayerInfo = SessionDataSystem.Instance.RemovePlayerInfo(clientId);
             _playerCardHandlers.Remove(clientId);
             if (updatePlayerInfo != null) //means there is another Player that will get made the new host
             {
@@ -114,7 +114,7 @@ namespace DiceyParty.Lobby
         [ServerRpc(RequireOwnership = false)]
         private void ServerUpdateName(string newName, int clientId)
         {
-            var updatePlayerInfo = SessionDataSystem.UpdateName(newName, clientId);
+            var updatePlayerInfo = SessionDataSystem.Instance.UpdateName(newName, clientId);
             var handler = _playerCardHandlers[clientId];
             handler.SetupServer(updatePlayerInfo);
         }
