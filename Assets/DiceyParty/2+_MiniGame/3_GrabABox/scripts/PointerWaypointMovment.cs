@@ -7,7 +7,7 @@ namespace DiceyParty.MiniGame.GrabABox
     public class PointerWaypointMovment : NetworkBehaviour
     {
         //hard coded config
-        [SerializeField] private float _speed = 5f;
+        [SerializeField] private GrabABoxConfigSO _gameConfig;
         [SerializeField] private LayerMask _planeMask;
         [SerializeField] private Transform _body;
     
@@ -56,14 +56,14 @@ namespace DiceyParty.MiniGame.GrabABox
             if(transform.position == _wayPoint) return;
             
             _movementDirection = _wayPoint - transform.position;
-            if (_movementDirection.magnitude < _speed * Time.deltaTime)
+            if (_movementDirection.magnitude < _gameConfig.Speed * Time.deltaTime)
             {
                 transform.position = _wayPoint;
                 _isMoving = false;
                 return;
             }
             _body.LookAt(_wayPoint);
-            transform.position += _movementDirection.normalized * (_speed * Time.deltaTime);
+            transform.position += _movementDirection.normalized * (_gameConfig.Speed * Time.deltaTime);
         
         }
     }

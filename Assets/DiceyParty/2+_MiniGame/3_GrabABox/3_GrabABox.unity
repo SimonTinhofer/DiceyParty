@@ -656,6 +656,7 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 208692287}
   _networkObjectCache: {fileID: 0}
+  _gameConfig: {fileID: 11400000, guid: 4112f4fb05c2e8147a9caa8136c86e90, type: 2}
   _gameSpawner: {fileID: 1064235413}
 --- !u!1 &1075093098
 GameObject:

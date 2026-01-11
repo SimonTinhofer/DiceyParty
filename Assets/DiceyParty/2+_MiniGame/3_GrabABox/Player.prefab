@@ -196,7 +196,7 @@ MonoBehaviour:
   _componentIndexCache: 2
   _addedNetworkObject: {fileID: 8675028551589224432}
   _networkObjectCache: {fileID: 8675028551589224432}
-  _speed: 5
+  _gameConfig: {fileID: 11400000, guid: 4112f4fb05c2e8147a9caa8136c86e90, type: 2}
   _planeMask:
     serializedVersion: 2
     m_Bits: 8

@@ -14,9 +14,9 @@ namespace DiceyParty
 
         private readonly SyncDictionary<int, PlayerInfo> _playerData = new();
         private readonly SyncVar<string> _sessionId = new();
+        private readonly SyncList<int> _clientIds = new(); //List to track the order players joined / who gets host next
         
         private Stack<int> _availableColors;
-        private readonly List<int> _clientIds = new(); //List to track the order players joined / who gets host next
         private int _hostId = -1;
 
         
@@ -99,8 +99,12 @@ namespace DiceyParty
         
         public Dictionary<int, PlayerInfo> GetPlayerData()
         {
-            var pD = _playerData.GetCollection(false);
-            return pD;
+            return _playerData.GetCollection(IsServerInitialized);
+        }
+
+        public List<int> GetClientIds()
+        {
+            return _clientIds.GetCollection(IsServerInitialized);
         }
         
         private void CheckIfServer()

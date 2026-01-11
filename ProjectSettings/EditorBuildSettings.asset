@@ -18,8 +18,11 @@ EditorBuildSettings:
     path: Assets/DiceyParty/2+_MiniGame/2_PaintTheBall/2_PaintTheBall.unity
     guid: caf008a42d9660042ab0bd07ff34b6a3
   - enabled: 1
-    path: Assets/DiceyParty/2+_MiniGame/3_GrabABox/GrabABox.unity
+    path: Assets/DiceyParty/2+_MiniGame/3_GrabABox/3_GrabABox.unity
     guid: 6cfd91b39b9c3f846aa6b88327ea31c9
+  - enabled: 1
+    path: Assets/DiceyParty/2+_MiniGame/4_CoinDilemma/4_CoinDilemma.unity
+    guid: d7c152149b6ebc94997d4e52b86f8669
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -8,6 +8,7 @@ namespace DiceyParty.MiniGame.GrabABox
 {
     public class GrabABoxManager : NetworkBehaviour
     {
+        [SerializeField] private GrabABoxConfigSO _gameConfig;
         [SerializeField] private SpawningManager _gameSpawner;
 
         public static Action OnStartRound;
@@ -48,9 +49,9 @@ namespace DiceyParty.MiniGame.GrabABox
 
         private async void PlayRound()
         {
-            await Awaitable.WaitForSecondsAsync(1f);
+            await Awaitable.WaitForSecondsAsync(_gameConfig.WaitForPlayerSpawnDuration);
             _gameSpawner.SpawnPlayers(_alivePlayers);
-            await Awaitable.WaitForSecondsAsync(2f);
+            await Awaitable.WaitForSecondsAsync(_gameConfig.WaitForSesselSpawnDuration);
             _gameSpawner.SpawnSessel(_alivePlayers.Count - 1);
         }
 
