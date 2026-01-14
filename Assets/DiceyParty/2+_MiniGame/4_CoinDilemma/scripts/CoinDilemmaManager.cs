@@ -10,6 +10,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
 {
     public class CoinDilemmaManager : NetworkBehaviour
     {
+        [SerializeField] private GlobalConfigSO _globalConfig;
         [SerializeField] private CoinDilemmaConfigSO _gameConfig;
         [SerializeField] private GameObject _playerScorePrefab;
 
@@ -25,6 +26,10 @@ namespace DiceyParty.MiniGame.CoinDilemma
             base.OnStartServer();
             SceneManager.OnClientPresenceChangeEnd += SpawnPlayerScore;
             MiniGameManager.OnStartGamePhase += StartRound;
+            foreach (var clientId in SessionDataSystem.Instance.GetClientIds())
+            {
+                _playerCoinAmounts.Add(clientId, 0);
+            }
         }
 
         private void OnDestroy()
@@ -63,7 +68,10 @@ namespace DiceyParty.MiniGame.CoinDilemma
         [ObserversRpc (BufferLast = true)]
         private void StartRoundObserver(int[] chestContent)
         {
-            UIManager.Instance.GenerateChests(chestContent);
+            int clientId = ClientManager.Connection.ClientId;
+            int colorIndex = SessionDataSystem.Instance.GetPlayerData()[clientId].ColorIndex;
+            Color ownerColor = _globalConfig.Colors[colorIndex];
+            UIManager.Instance.GenerateChests(chestContent, ownerColor);
             UIManager.Instance.StartTimer(_gameConfig.RoundDecisionPhaseDuration);
         }
 
@@ -94,10 +102,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
                 if (chestChoosers[i].Count == 1)
                 {
                     int clientId = chestChoosers[i][0];
-                    if(_playerCoinAmounts.ContainsKey(clientId))
-                        _playerCoinAmounts[clientId] += _chestAmounts[i];
-                    else
-                        _playerCoinAmounts.Add(clientId, _chestAmounts[i]);
+                    _playerCoinAmounts[clientId] += _chestAmounts[i];
                 }
                 else if(chestChoosers[i].Count > 1)
                 {
@@ -128,7 +133,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
         private void FinishMiniGame()
         {
             var orderedCoinAmounts = _playerCoinAmounts.OrderByDescending(pair => pair.Value);
-            Dictionary<int, int> placements = orderedCoinAmounts.Select((pair, index) => new { pair.Key, Rank = index }).ToDictionary(pair => pair.Key, pair => pair.Rank);
+            Dictionary<int, int> placements = orderedCoinAmounts.Select((pair, index) => new { pair.Key, Rank = orderedCoinAmounts.Count(p => p.Value > pair.Value) }).ToDictionary(pair => pair.Key, pair => pair.Rank);
             SceneManager.OnClientPresenceChangeEnd -= SpawnPlayerScore;
             MiniGameManager.FinishedGamePhase(placements);
         }

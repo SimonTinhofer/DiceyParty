@@ -15,6 +15,7 @@ namespace DiceyParty.MiniGame
             base.OnStartClient();
             int colorIndex = SessionDataSystem.Instance.GetPlayerData()[OwnerId].ColorIndex;
             Color color = _globalConfig.Colors[colorIndex];
+            
             if(_renderer)
                 _renderer.material.color = color;
             if(_image)

@@ -23,6 +23,8 @@ namespace DiceyParty.MiniGame.PaintTheBall
                 return;
             }
 
+            _ringAngleDeg = ClientManager.Connection.ClientId * 20;
+
             _moveAction = InputSystem.actions.FindAction("Move");
             
             Camera cam = Camera.main;

@@ -936,6 +936,7 @@ MonoBehaviour:
   _componentIndexCache: 255
   _addedNetworkObject: {fileID: 208692287}
   _networkObjectCache: {fileID: 0}
+  _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}
   _gameConfig: {fileID: 11400000, guid: df0fff550acf53b4897b0147f6e9d116, type: 2}
   _playerScorePrefab: {fileID: 1595784523852520499, guid: 0e990448b1288ae4eae88dce41066565, type: 3}
 --- !u!1 &1613122757

@@ -36,7 +36,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
                 Instance = this;
         }
 
-        public void GenerateChests(int[] chestAmounts)
+        public void GenerateChests(int[] chestAmounts, Color ownerColor)
         {
             if(_chests != null)
                 foreach (var chest in _chests)
@@ -52,7 +52,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
                 _chests[i] = chest;
                 int index = i;
                 chest.ChestButton.onClick.AddListener(() => ChestClicked(index));
-                chest.Initialize(chestAmounts[i], SessionDataSystem.Instance.GetPlayerData().Count);
+                chest.Initialize(chestAmounts[i], SessionDataSystem.Instance.GetPlayerData().Count, ownerColor);
             }
             int preselectedBox = Random.Range(0, chestAmounts.Length);
             ChestClicked(preselectedBox);

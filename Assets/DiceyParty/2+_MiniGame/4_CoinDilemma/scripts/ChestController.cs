@@ -12,17 +12,24 @@ namespace DiceyParty.MiniGame.CoinDilemma
         [SerializeField] private TMP_Text _amountText;
         [SerializeField] private Transform _infoMarkerContainer;
         [SerializeField] private GameObject _infoMarkerPrefab;
-        [SerializeField] private GameObject _choiceIndicator;
+        [SerializeField] private GameObject _indicator;
+        [SerializeField] private Image _indicatorImage;
         [SerializeField] private GlobalConfigSO _globalConfig;
         [SerializeField] private GameObject _cross;
 
         private Dictionary<int, GameObject> _infoMarkerArray = new();
 
 
-        public void Initialize(int amount, int clientCount)
+        public void Initialize(int amount, int clientCount, Color indicatorColor)
         {
+            SetIndicatorColor(indicatorColor);
             SetAmount(amount);
             SpawnMarkers(clientCount);
+        }
+
+        private void SetIndicatorColor(Color indicatorColor)
+        {
+            _indicatorImage.color = indicatorColor;
         }
 
         private void SetAmount(int amount)
@@ -50,7 +57,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
 
         public void ToggleChoiceIndicator(bool toggle)
         {
-            _choiceIndicator.gameObject.SetActive(toggle);
+            _indicator.gameObject.SetActive(toggle);
         }
 
         public void ToggleCross(bool toggle)

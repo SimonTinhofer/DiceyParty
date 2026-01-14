@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 3578283841881081558}
   - component: {fileID: 2691293941879753822}
   - component: {fileID: 3587542531869122673}
-  - component: {fileID: 4822731743063228019}
   - component: {fileID: -7714324923566013880}
   m_Layer: 5
   m_Name: PlayerScore
@@ -123,24 +122,10 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: -7714324923566013880}
   _networkObjectCache: {fileID: 0}
   _coinText: {fileID: 4412201489323551395}
---- !u!114 &4822731743063228019
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1595784523852520499}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23da681ccc624382a779fa6466b813f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.OwnerColor
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: -7714324923566013880}
-  _networkObjectCache: {fileID: 0}
+  _bgImage: {fileID: 3578283841881081558}
+  _coinImage: {fileID: 2948949281954076043}
   _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}
-  _renderer: {fileID: 0}
-  _image: {fileID: 3578283841881081558}
+  _gameConfig: {fileID: 11400000, guid: df0fff550acf53b4897b0147f6e9d116, type: 2}
 --- !u!114 &-7714324923566013880
 MonoBehaviour:
   m_ObjectHideFlags: 0

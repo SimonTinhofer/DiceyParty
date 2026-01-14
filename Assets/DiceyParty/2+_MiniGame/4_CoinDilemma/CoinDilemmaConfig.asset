@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: CoinDilemmaConfig
   m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.CoinDilemma.CoinDilemmaConfigSO
   RoundDecisionPhaseDuration: 10
+  RoundResultPhaseDuration: 5
+  RoundCount: 3
+  NonOwnerScoreAlpha: 0.7
