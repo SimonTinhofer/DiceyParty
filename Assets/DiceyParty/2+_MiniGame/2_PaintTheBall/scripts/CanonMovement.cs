@@ -9,6 +9,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
     {
         [SerializeField] PaintTheBallConfigSO _paintTheBallConfig;
         [SerializeField] Transform _bodyTransform;
+        [SerializeField] Transform _camTransform;
         private float _ringAngleDeg;
         private float _pitch;
         private InputAction _moveAction;
@@ -23,14 +24,24 @@ namespace DiceyParty.MiniGame.PaintTheBall
                 return;
             }
 
-            _ringAngleDeg = ClientManager.Connection.ClientId * 20;
+            int clientId = ClientManager.Connection.ClientId;
+            var clientIds = SessionDataSystem.Instance.GetClientIds();
+            for (int i = 0; i < clientIds.Count; i++)
+            {
+                if (clientId == clientIds[i])
+                {
+                    float angleDistance = 360f / clientIds.Count;
+                    _ringAngleDeg = angleDistance * i;
+                }
+            }
+
 
             _moveAction = InputSystem.actions.FindAction("Move");
             
             Camera cam = Camera.main;
-            cam.transform.position = transform.position;
-            cam.transform.rotation = transform.rotation;
-            cam.transform.parent = _bodyTransform;
+            cam.transform.position = _camTransform.position;
+            cam.transform.rotation = _camTransform.rotation;
+            cam.transform.parent = _camTransform;
 
             PaintTheBallManager.TogglePlayerControls += ToggleControls;
         }
@@ -54,10 +65,10 @@ namespace DiceyParty.MiniGame.PaintTheBall
             _pitch += deltaPitch;
             _pitch = Mathf.Clamp(_pitch, -_paintTheBallConfig.MaxPitch, _paintTheBallConfig.MaxPitch);
 
-            if(Mathf.Abs(moveInput.x) > 0.1)
+            if(Mathf.Abs(moveInput.x) > 0.1f)
                 _ringAngleDeg += moveInput.x * _paintTheBallConfig.AngleSpeed * Time.deltaTime;
 
-            transform.position = new Vector3(Mathf.Cos(Mathf.Deg2Rad * _ringAngleDeg) * _paintTheBallConfig.Radius, 1, Mathf.Sin(Mathf.Deg2Rad * _ringAngleDeg) * _paintTheBallConfig.Radius);
+            transform.position = new Vector3(Mathf.Cos(Mathf.Deg2Rad * _ringAngleDeg) * _paintTheBallConfig.Radius, 0f, Mathf.Sin(Mathf.Deg2Rad * _ringAngleDeg) * _paintTheBallConfig.Radius);
             _bodyTransform.localRotation = Quaternion.Euler(_pitch, _paintTheBallConfig.RotationOffset.y - _ringAngleDeg, 0f);
         }
     }

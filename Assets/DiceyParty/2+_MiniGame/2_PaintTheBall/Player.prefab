@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 507308883535295782}
   serializedVersion: 2
   m_LocalRotation: {x: -0.08715579, y: -0, z: -0, w: 0.9961947}
-  m_LocalPosition: {x: 0, y: -1.09, z: 1.44}
+  m_LocalPosition: {x: 0, y: 1.05, z: 1.44}
   m_LocalScale: {x: 0.1, y: 0.10000004, z: 0.10000004}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -59,7 +59,7 @@ Transform:
   m_GameObject: {fileID: 2480296876264413199}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.63, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -98,7 +98,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: d4eec6c7d9ab2be46ab949e75ee0717a, type: 2}
+  - {fileID: 2100000, guid: db68799b275f5ed4cbc75041af34b4b9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -142,6 +142,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &3107516145436561116
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7000706504265467672}
+  m_Layer: 0
+  m_Name: CamTransform
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7000706504265467672
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3107516145436561116}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.8, z: 0.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 482260480667993531}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3524706195971082279
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,7 +201,7 @@ Transform:
   m_GameObject: {fileID: 3524706195971082279}
   serializedVersion: 2
   m_LocalRotation: {x: 0.6646543, y: -0, z: -0, w: 0.747151}
-  m_LocalPosition: {x: 0, y: -1.21, z: 0.44}
+  m_LocalPosition: {x: 0, y: 0.92999995, z: 0.44}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -285,6 +316,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7000706504265467672}
   - {fileID: 2258026752574330246}
   - {fileID: 1207979242177345075}
   - {fileID: 6907974754124431235}
@@ -350,6 +382,7 @@ GameObject:
   - component: {fileID: 2328730076883576765}
   - component: {fileID: 4339896275601350105}
   - component: {fileID: 2141820247989210251}
+  - component: {fileID: 5694816373495321575}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -509,6 +542,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 2269828299578378790}
   _paintTheBallConfig: {fileID: 11400000, guid: 1f030f25e74027d43aa44fb53ed00aed, type: 2}
   _bodyTransform: {fileID: 482260480667993531}
+  _camTransform: {fileID: 7000706504265467672}
 --- !u!114 &2141820247989210251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -527,3 +561,21 @@ MonoBehaviour:
   _paintTheBallConfig: {fileID: 11400000, guid: 1f030f25e74027d43aa44fb53ed00aed, type: 2}
   _projectilePrefab: {fileID: 5232454815669328856, guid: 4ee60e2db91b90c48a9a0dc3532dd251, type: 3}
   _projectileSpawnPoint: {fileID: 1207979242177345075}
+--- !u!114 &5694816373495321575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5481675611547381580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23da681ccc624382a779fa6466b813f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.OwnerColor
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 2269828299578378790}
+  _networkObjectCache: {fileID: 0}
+  _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}
+  _renderer: {fileID: 5112255567716935079}
+  _image: {fileID: 0}

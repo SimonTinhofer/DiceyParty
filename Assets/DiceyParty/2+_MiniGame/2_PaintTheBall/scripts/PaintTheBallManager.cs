@@ -39,7 +39,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         private void SpawnPlayer(ClientPresenceChangeEventArgs args)
         {
             NetworkConnection conn = args.Connection;
-            NetworkObject nob = NetworkManager.GetPooledInstantiated(_playerPrefab, new Vector3(_paintTheBallConfig.Radius, 1, 0), Quaternion.identity, true);
+            NetworkObject nob = NetworkManager.GetPooledInstantiated(_playerPrefab, new Vector3(_paintTheBallConfig.Radius, 0, 0), Quaternion.identity, true);
             NetworkManager.ServerManager.Spawn(nob, conn);
         }
 
