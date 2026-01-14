@@ -8,7 +8,8 @@ namespace DiceyParty.MiniGame.PaintTheBall
 {
     public class ShootingControls : NetworkBehaviour
     {
-        [SerializeField] private PaintTheBallConfigSO _paintTheBallConfig;
+        [SerializeField] private PaintTheBallConfigSO _gameConfig;
+        [SerializeField] private GlobalConfigSO _globalConfig;
         [SerializeField] private GameObject _projectilePrefab;
         [SerializeField] private Transform _projectileSpawnPoint;       
         private bool _onCooldown;
@@ -43,7 +44,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
             while (_shootingEnabled)
             {
                 ShootProjectile();
-                await Awaitable.WaitForSecondsAsync(_paintTheBallConfig.ShootingCooldown);
+                await Awaitable.WaitForSecondsAsync(_gameConfig.ShootingCooldown);
             }
         }
 
@@ -51,9 +52,14 @@ namespace DiceyParty.MiniGame.PaintTheBall
 
         private void ShootProjectile()
         {
-            float force =  _paintTheBallConfig.ShootingForce;
+            float force =  _gameConfig.ShootingForce;
             Vector3 direction = _projectileSpawnPoint.forward;
             GameObject proj = Instantiate(_projectilePrefab, _projectileSpawnPoint.position, Quaternion.identity);
+            int clientId = ClientManager.Connection.ClientId;
+            int colorIndex = SessionDataSystem.Instance.GetPlayerData()[clientId].ColorIndex;
+            Color color = _globalConfig.Colors[colorIndex];
+            var projectileLogic = proj.GetComponent<ProjectileLogic>();
+            projectileLogic.PassColor(color);
 
             Rigidbody rb = proj.GetComponent<Rigidbody>();
             if (rb != null)
