@@ -5,10 +5,10 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/DiceyParty/0_Menu/0_TestMenu.unity
     guid: 16aa59a1f8d6a3b4cb04c1a706399e75
-  - enabled: 0
+  - enabled: 1
     path: Assets/DiceyParty/0_Menu/0_Menu.unity
     guid: 9702e24361df38140a9016879dd4a719
   - enabled: 1
@@ -23,6 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/DiceyParty/2+_MiniGame/4_CoinDilemma/4_CoinDilemma.unity
     guid: d7c152149b6ebc94997d4e52b86f8669
+  - enabled: 1
+    path: Assets/DiceyParty/2+_MiniGame/5_RollOff/5_RollOff.unity
+    guid: 6ddc90878a987954f8072c9a3e8f9fd2
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

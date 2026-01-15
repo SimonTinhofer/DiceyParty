@@ -19,7 +19,7 @@ MonoBehaviour:
   ShootingCooldown: 0.7
   LookSpeed: 25
   MaxPitch: 45
-  GameDuration: 30
+  GameDuration: 45
   AngleSpeed: 67.5
   Radius: 13.5
   RotationOffset: {x: 0, y: -90, z: 0}
