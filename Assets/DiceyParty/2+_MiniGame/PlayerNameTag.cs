@@ -3,7 +3,7 @@ using FishNet.Object;
 using TMPro;
 using UnityEngine;
 
-namespace DiceyParty.MiniGame.GrabABox
+namespace DiceyParty.MiniGame
 {
     public class PlayerNameTag : NetworkBehaviour
     {

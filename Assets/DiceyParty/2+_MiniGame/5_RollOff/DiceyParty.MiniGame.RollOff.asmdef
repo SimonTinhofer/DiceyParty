@@ -1,0 +1,20 @@
+{
+    "name": "DiceyParty.MiniGame.RollOff",
+    "rootNamespace": "",
+    "references": [
+        "FishNet.Runtime",
+        "Unity.InputSystem",
+        "DiceyParty.MiniGame",
+        "Unity.TextMeshPro",
+        "DiceyParty"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

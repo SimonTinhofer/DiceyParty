@@ -14,13 +14,33 @@ namespace DiceyParty
         [SerializeField] Image containerIcon;
         [SerializeField] TextMeshProUGUI containerText;
         [SerializeField] TextMeshProUGUI containerActionText;
-        
+        private bool _isShift;
 
-        private void Start() {
+        private void Start()
+        {
+            OSKController.OnToggleShift += ShiftToggled;
             SetContainerBorderColor(ColorDataStore.GetKeyboardBorderColor());
             SetContainerFillColor(ColorDataStore.GetKeyboardFillColor());
             SetContainerTextColor(ColorDataStore.GetKeyboardTextColor());
             SetContainerActionTextColor(ColorDataStore.GetKeyboardActionTextColor());
+        }
+
+        private void OnDestroy()
+        {
+            OSKController.OnToggleShift -= ShiftToggled;
+        }
+
+        private void ShiftToggled(bool toggle)
+        {
+            _isShift = toggle;
+            if (toggle)
+            {
+                containerText.text = containerText.text.ToUpper();
+            }
+            else
+            {
+                containerText.text = containerText.text.ToLower();
+            }
         }
 
         public void SetContainerBorderColor(Color color) => containerBorderImage.color = color;
@@ -31,25 +51,23 @@ namespace DiceyParty
             containerIcon.color = color;
         }
 
-        public void AddLetter() {
-            if(OSKController.Instance != null) {
-                OSKController.Instance.AddLetter(containerText.text);
-            } else {
-                Debug.Log(containerText.text + " is pressed");
-            }
+        public void AddLetter() 
+        {
+            OSKController.Instance.AddLetter(containerText.text);
+            if(_isShift)
+                OSKController.ToggleShift(false);
         }
-        public void DeleteLetter() { 
-            if(OSKController.Instance != null) {
-                OSKController.Instance.DeleteLetter();
-            } else {
-                Debug.Log("Last char deleted");
-            }
+        public void DeleteLetter() 
+        { 
+            OSKController.Instance.DeleteLetter();
         }
-        public void SubmitWord() {
-            if(OSKController.Instance != null) {
-                OSKController.Instance.SubmitWord();
-            } else {
-                Debug.Log("Submitted successfully!");
+        public void ActivateShift() 
+        {
+            if(!_isShift)
+                OSKController.ToggleShift(true);
+            else
+            {
+                OSKController.ToggleShift(false);
             }
         }
     }

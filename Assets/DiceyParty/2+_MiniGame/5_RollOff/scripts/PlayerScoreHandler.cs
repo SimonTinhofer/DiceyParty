@@ -11,14 +11,10 @@ namespace DiceyParty.MiniGame.RollOff
         [SerializeField] private Image _bgImage;
         [SerializeField] private GlobalConfigSO _globalConfig;
         [SerializeField] private Transform _scoreTransform;
-        
-        private void Start()
-        {
-            _scoreTransform.SetParent(UIManager.Instance.GetScoreParent(), false);
-        }
 
         public override void OnStartClient()
         {
+            _scoreTransform.SetParent(UIManager.Instance.GetScoreParent(), false);
             base.OnStartClient();
             int colorIndex = SessionDataSystem.Instance.GetPlayerData()[OwnerId].ColorIndex;
             Color bgColor = _globalConfig.Colors[colorIndex];

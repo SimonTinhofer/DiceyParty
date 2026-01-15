@@ -19,5 +19,6 @@ namespace DiceyParty
 
         public float TutorialDuration = 2;
         public float ResultsDuration = 2;
+        public int MaxNameLength = 10;
     }
 }

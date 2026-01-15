@@ -1225,7 +1225,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 995963138555756902, guid: 27de4f094cd29433aa58ccea79ea4885, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SubmitWord
+      value: ActivateShift
       objectReference: {fileID: 0}
     - target: {fileID: 4078654318110649153, guid: 27de4f094cd29433aa58ccea79ea4885, type: 3}
       propertyPath: m_Name

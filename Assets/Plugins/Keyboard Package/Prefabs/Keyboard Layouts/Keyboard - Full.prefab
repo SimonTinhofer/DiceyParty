@@ -3176,7 +3176,7 @@ PrefabInstance:
       objectReference: {fileID: 6275315161778723154}
     - target: {fileID: 302667947843482933, guid: 913a6ef154ade4eba8889947dd6c49dd, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: SubmitWord
+      value: ActivateShift
       objectReference: {fileID: 0}
     - target: {fileID: 302667948925663204, guid: 913a6ef154ade4eba8889947dd6c49dd, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
