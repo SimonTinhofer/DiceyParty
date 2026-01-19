@@ -15,11 +15,5 @@ namespace DiceyParty.MiniGame.GrabABox
 
             _collider.enabled = true;
         }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Box"))
-                _collider.enabled = false;
-        }
     }
 }
