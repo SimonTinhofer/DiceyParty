@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FishNet.Object;
 using UnityEngine;
 
@@ -44,14 +45,30 @@ namespace DiceyParty.MiniGame.GrabABox
         {
             var playerData =  SessionDataSystem.Instance.GetPlayerData();
             _alivePlayers = playerData.Select(a => a.Value.ClientId).ToList();
-            PlayRound();
+            TryPlayRound();
         }
 
-        private async void PlayRound()
+        private async void TryPlayRound()
         {
-            await Awaitable.WaitForSecondsAsync(_gameConfig.WaitForPlayerSpawnDuration);
+            try
+            {
+                await PlayRound();
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"{this.name}.PlayRound  failed: {e.Message}");
+            }
+        }
+
+        private async Awaitable PlayRound()
+        {
+            await Awaitable.WaitForSecondsAsync(_gameConfig.WaitForPlayerSpawnDuration, destroyCancellationToken);
             _gameSpawner.SpawnPlayers(_alivePlayers);
-            await Awaitable.WaitForSecondsAsync(_gameConfig.WaitForSesselSpawnDuration);
+            await Awaitable.WaitForSecondsAsync(_gameConfig.WaitForBoxSpawnDuration, destroyCancellationToken);
             _gameSpawner.SpawnSessel(_alivePlayers.Count - 1);
         }
 
@@ -67,23 +84,39 @@ namespace DiceyParty.MiniGame.GrabABox
             _gameSpawner.DespawnPlayer(clientID);
             if(_alivePlayers.Count == 1)
             {
-                CleanUpRound();
+                TryCleanUpRound();
             }
         }
 
-        private async void CleanUpRound()
+        private async void TryCleanUpRound()
         {
-            await Awaitable.WaitForSecondsAsync(1);
+            try
+            {
+                await CleanUpRound();
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"{this.name}.CleanUpRound failed: {e.Message}");
+            };
+        }
+
+        private async Awaitable CleanUpRound()
+        {
+            await Awaitable.WaitForSecondsAsync(_gameConfig.WaitForPlayerDespawnDuration, destroyCancellationToken);
             _gameSpawner.DespawnPlayer(_alivePlayers[0]);
             _placements.Add(_alivePlayers[0], _survivedPlayers.Count);
-            await Awaitable.WaitForSecondsAsync(1);
-            _gameSpawner.DespawnSessel();
+            await Awaitable.WaitForSecondsAsync(_gameConfig.WaitForBoxDespawnDuration, destroyCancellationToken);
+            _gameSpawner.DespawnBox();
 
             _alivePlayers = new List<int>(_survivedPlayers);
             if (_alivePlayers.Count > 1)
             {
                 _survivedPlayers.Clear();
-                PlayRound();
+                TryPlayRound();
             }
             else
             {

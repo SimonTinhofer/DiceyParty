@@ -25,12 +25,18 @@ namespace DiceyParty.Lobby
             else
                 _instance = this;
         }
+        
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+        }
 
         public override void OnStartServer()
         {
             base.OnStartServer();
-            string sessionId = SessionDataSystem.Instance.GetSessionId();
-            ObserverSetSessionId(sessionId);
+            Session session = SessionDataSystem.Instance.GetSession();
+            Debug.Log(session.Name);
+            ObserverSetSessionName(session.Name);
 
             SceneManager.OnClientPresenceChangeEnd += OnClientPresenceChangeEnd;
         }
@@ -66,9 +72,9 @@ namespace DiceyParty.Lobby
         }
 
         [ObserversRpc (BufferLast = true)]
-        private void ObserverSetSessionId(string sessionId)
+        private void ObserverSetSessionName(string sessionName)
         {
-            _lobbyUIHandler.SetSessionId(sessionId);
+            _lobbyUIHandler.SetSessionName(sessionName);
         }
 
         public static void LeaveSession() => _instance.HandleLeaveSession();
@@ -82,7 +88,7 @@ namespace DiceyParty.Lobby
         private void ServerLeaveSession(int clientId, NetworkConnection conn)
         {
             Debug.Log("Removing Player Info");
-            var updatePlayerInfo = SessionDataSystem.Instance.RemovePlayerInfo(clientId);
+            var updatePlayerInfo = SessionDataSystem.Instance.TryRemovePlayerInfo(clientId);
             _playerCardHandlers.Remove(clientId);
             if (updatePlayerInfo != null) //means there is another Player that will get made the new host
             {
@@ -100,8 +106,6 @@ namespace DiceyParty.Lobby
         private void TargetLeaveSession(NetworkConnection conn)
         {
             ClientManager.StopConnection();
-            Destroy(NetworkManager.gameObject);
-            UnityEngine.SceneManagement.SceneManager.LoadScene(0);
         }
 
         public static void UpdateName(string newName) => _instance.HandleUpdateName(newName);

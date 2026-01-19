@@ -11,6 +11,8 @@ namespace DiceyParty.MiniGame.GrabABox
         public float BoxMinDistance = 2f;
         public float Speed = 6f;
         public float WaitForPlayerSpawnDuration = 0.2f;
-        public float WaitForSesselSpawnDuration = 2.2f;
+        public float WaitForPlayerDespawnDuration = 1f;
+        public float WaitForBoxSpawnDuration = 2.2f;
+        public float WaitForBoxDespawnDuration = 1f;
     }
 }

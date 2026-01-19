@@ -10,13 +10,13 @@ namespace DiceyParty.MiniGame
         public Dictionary<int, ResultCardInfo> ProcessResults(Dictionary<int, int> placements)
         {
             Dictionary<int, ResultCardInfo> resultCardData = new();
-            Dictionary<int, PlayerInfo> playerData = SessionDataSystem.Instance.GetPlayerData();
+            IReadOnlyDictionary<int, PlayerInfo> playerData = SessionDataSystem.Instance.GetPlayerData();
             foreach (var entry in placements)
             {
                 int clientId = entry.Key;
                 int placement = entry.Value;
                 PlayerInfo p = playerData[clientId];
-                ResultCardInfo info = new(p.PlayerName, placement);
+                ResultCardInfo info = new(p.Name, placement, p.ColorIndex);
                 resultCardData.Add(clientId, info);
             }
             return resultCardData;

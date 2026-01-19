@@ -11,6 +11,7 @@ namespace DiceyParty
     {
         private static SessionStageSystem _instance;
         private int _nextMiniGameSceneId;
+        private SessionStage _currentStage = SessionStage.Lobby;
 
         private void Awake()
         {
@@ -24,13 +25,14 @@ namespace DiceyParty
         }
 
         public static void SetNextMiniGame(int sceneId) => _instance._nextMiniGameSceneId = sceneId;
-        public static void ChangeState(SessionStage state) => _instance.HandleChangeState(state);
+        public static void ChangeState(SessionStage stage) => _instance.HandleChangeState(stage);
 
-        private void HandleChangeState(SessionStage state)
+        private void HandleChangeState(SessionStage stage)
         {
             CheckIfServer();
+            _currentStage = stage;
 
-            switch (state)
+            switch (stage)
             {
                 case SessionStage.Lobby:
                     LoadSceneByIndex(1);
@@ -39,10 +41,12 @@ namespace DiceyParty
                 case SessionStage.MiniGame:
                     LoadSceneByIndex(_nextMiniGameSceneId);
                     break;
-                
-                default:
-                    throw new NotImplementedException();
             }
+        }
+        
+        public static SessionStage GetCurrentStage()
+        {
+            return _instance._currentStage;
         }
 
         private void LoadSceneByIndex (int sceneIndex)

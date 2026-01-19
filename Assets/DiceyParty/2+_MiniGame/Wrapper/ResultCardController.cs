@@ -18,8 +18,7 @@ namespace DiceyParty.MiniGame
         {
             _resultCardInfo = resultCardInfo;
             _name.text = resultCardInfo.Name;
-            int colorIndex = SessionDataSystem.Instance.GetPlayerData()[clientId].ColorIndex;
-            _image.color = _globalConfig.Colors[colorIndex];
+            _image.color = _globalConfig.Colors[resultCardInfo.ColorIndex];
             _placement.text = $"{resultCardInfo.Placement + 1}.";
         }
 

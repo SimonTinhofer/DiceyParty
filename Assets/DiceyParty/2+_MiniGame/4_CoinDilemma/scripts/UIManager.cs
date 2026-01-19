@@ -90,7 +90,6 @@ namespace DiceyParty.MiniGame.CoinDilemma
             {
                 _timerIsRunning = false;
                 _timerText.text = "00:00";
-                _coinDilemmaManager.PassClientsChestIndex(InstanceFinder.ClientManager.Connection.ClientId, _selectedChestIndex);
                 return;
             }
             int timerSeconds = (int) MathF.Floor(timerTime);
@@ -110,6 +109,11 @@ namespace DiceyParty.MiniGame.CoinDilemma
             {
                 _chests[index].ToggleCross(true);
             }
+        }
+
+        public int GetChestIndex()
+        {
+            return _selectedChestIndex;
         }
     }
 }

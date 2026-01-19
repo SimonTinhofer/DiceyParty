@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FishNet.Connection;
 using FishNet.Managing.Scened;
 using FishNet.Object;
@@ -21,7 +22,6 @@ namespace DiceyParty.MiniGame.GrabABox
         {
             base.OnStartServer();
             SceneManager.OnClientPresenceChangeEnd += OnClientPresenceChangeEnd;
-            _playerConns = ClientManager.Clients;
         }
 
         private void OnDestroy()
@@ -31,8 +31,8 @@ namespace DiceyParty.MiniGame.GrabABox
 
         private void OnClientPresenceChangeEnd(ClientPresenceChangeEventArgs args)
         {
-            if(!_playerConns.TryGetValue(args.Connection.ClientId, out NetworkConnection conn))
-                _playerConns.Add(args.Connection.ClientId, args.Connection);
+            if (!SessionDataSystem.Instance.GetClientIds().Contains(args.Connection.ClientId)) return;
+            _playerConns.TryAdd(args.Connection.ClientId, args.Connection);
         }
 
         public void SpawnPlayers(List<int> clientIDs)
@@ -69,7 +69,7 @@ namespace DiceyParty.MiniGame.GrabABox
             }
         }
 
-        public void DespawnSessel()
+        public void DespawnBox()
         {
             foreach(NetworkObject nob in _boxNobs)
             {

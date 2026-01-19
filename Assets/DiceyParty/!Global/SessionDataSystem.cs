@@ -9,11 +9,14 @@ namespace DiceyParty
 {
     public class SessionDataSystem : NetworkBehaviour
     {
+        public static Action OnLastPlayerRemoved;
         public static SessionDataSystem Instance;
         [SerializeField] private GlobalConfigSO _globalConfig;
 
+        //Server-only-access
+        private Session _session;  
+        
         private readonly SyncDictionary<int, PlayerInfo> _playerData = new();
-        private readonly SyncVar<string> _sessionId = new();
         private readonly SyncList<int> _clientIds = new(); //List to track the order players joined / who gets host next
         
         private Stack<int> _availableColors;
@@ -34,15 +37,16 @@ namespace DiceyParty
             _availableColors = new Stack<int>(Enumerable.Range(0, _globalConfig.MaxPlayerCount).Reverse());
         }
         
-        public void SetSessionId(string sessionId)
+        public void SetSession(Session session)
         {
             CheckIfServer();
-            _sessionId.Value = sessionId;
+            _session = session;
         }
 
-        public string GetSessionId()
+        public Session GetSession()
         {
-            return _sessionId.Value;
+            CheckIfServer();
+            return _session;
         }
 
         public PlayerInfo CreatePlayerInfo(int clientId)
@@ -66,7 +70,7 @@ namespace DiceyParty
             return player;
         }
         
-        public PlayerInfo RemovePlayerInfo(int clientId)
+        public PlayerInfo TryRemovePlayerInfo(int clientId)
         {
             CheckIfServer();
             
@@ -83,10 +87,12 @@ namespace DiceyParty
                 playerInfo.SetIsHost(true);
                 return playerInfo;
             }
-            
-            _hostId = -1;
-            
-            return null;
+            else
+            {
+                OnLastPlayerRemoved?.Invoke();
+                _hostId = -1;
+                return null;
+            }
         }
         
         public PlayerInfo UpdateName(string newName, int clientId)
@@ -97,12 +103,12 @@ namespace DiceyParty
             return _playerData[clientId];
         }
         
-        public Dictionary<int, PlayerInfo> GetPlayerData()
+        public IReadOnlyDictionary<int, PlayerInfo> GetPlayerData()
         {
             return _playerData.GetCollection(IsServerInitialized);
         }
 
-        public List<int> GetClientIds()
+        public IReadOnlyList<int> GetClientIds()
         {
             return _clientIds.GetCollection(IsServerInitialized);
         }

@@ -18,11 +18,13 @@ namespace DiceyParty.MiniGame.PaintTheBall
 
         [SerializeField] private GameObject _playerPrefab;
         [SerializeField] private PaintTheBallConfigSO _paintTheBallConfig;
+        private List<int> _playersToSpawn;
         private int _clientId;
 
 
         public override void OnStartServer()
         {
+            _playersToSpawn = SessionDataSystem.Instance.GetClientIds().ToList();
             base.OnStartServer();
             SceneManager.OnClientPresenceChangeEnd += SpawnPlayer;
             _playerCount.Value = SessionDataSystem.Instance.GetPlayerData().Count;
@@ -38,6 +40,10 @@ namespace DiceyParty.MiniGame.PaintTheBall
 
         private void SpawnPlayer(ClientPresenceChangeEventArgs args)
         {
+            Debug.Log("spawnPlayerCalled: " + _playersToSpawn.Contains(args.Connection.ClientId));
+            if (!_playersToSpawn.Contains(args.Connection.ClientId)) return;
+            _playersToSpawn.Remove(args.Connection.ClientId);
+            
             NetworkConnection conn = args.Connection;
             NetworkObject nob = NetworkManager.GetPooledInstantiated(_playerPrefab, new Vector3(_paintTheBallConfig.Radius, 0, 0), Quaternion.identity, true);
             NetworkManager.ServerManager.Spawn(nob, conn);
@@ -51,16 +57,28 @@ namespace DiceyParty.MiniGame.PaintTheBall
             TogglePlayerControls = null;
         }
 
-        private void OnStartGamePhase()
+        private async void OnStartGamePhase()
         {
-            UIManager.StartTimer(_paintTheBallConfig.GameDuration);
-            WaitGameDuration();
-            TogglePlayerControls.Invoke(true);
+
+            try
+            {
+                await HandleGamePhase();
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"OnStartGamePhase loop failed: {e.Message}");
+            }
         }
 
-        private async void WaitGameDuration()
+        private async Awaitable HandleGamePhase()
         {
-            await Awaitable.WaitForSecondsAsync(_paintTheBallConfig.GameDuration);
+            UIManager.StartTimer(_paintTheBallConfig.GameDuration);
+            TogglePlayerControls.Invoke(true);
+            await Awaitable.WaitForSecondsAsync(_paintTheBallConfig.GameDuration, destroyCancellationToken);
             TogglePlayerControls.Invoke(false);
             FinishedGamePhase(_clientId);
         }

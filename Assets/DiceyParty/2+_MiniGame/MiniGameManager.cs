@@ -49,8 +49,19 @@ namespace DiceyParty.MiniGame
 
         private async void StartTutorialPhase()
         {
-            await _miniGameWrapper.TutorialPhase();
-            ClientFinishedTutorialPhase(_clientId);
+            try
+            {
+                await _miniGameWrapper.TutorialPhase(destroyCancellationToken);
+                ClientFinishedTutorialPhase(_clientId);
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"OnStartGamePhase loop failed: {e.Message}");
+            }
         }
 
         #region TutorialPhase
@@ -65,7 +76,11 @@ namespace DiceyParty.MiniGame
             }
             
             _readyPlayers.Add(clientId);
-            if (_readyPlayers.Count != _playerCount) return;
+            if (_readyPlayers.Count < _playerCount) return;
+            if (_readyPlayers.Count > _playerCount){
+                Debug.LogWarning($"FinishedTutorialPhase was called too often!");
+                return;
+            }
             
             _currentPhase = MiniGamePhase.GamePhase;
             OnStartGamePhase?.Invoke();
@@ -107,8 +122,19 @@ namespace DiceyParty.MiniGame
         }
         private async void PlayOutResultPhase(Dictionary<int, ResultCardInfo> resultCardData)
         {
-            await _miniGameWrapper.ResultsPhase(resultCardData);
-            ClientFinishedResultPhase(_clientId);
+            try
+            {
+                await _miniGameWrapper.ResultsPhase(resultCardData, destroyCancellationToken);
+                ClientFinishedResultPhase(_clientId);
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"OnStartGamePhase loop failed: {e.Message}");
+            }
         }
         
         [ServerRpc (RequireOwnership = false)]
@@ -121,10 +147,12 @@ namespace DiceyParty.MiniGame
             }
             
             _readyPlayers.Add(clientId);
-            if (_readyPlayers.Count != _playerCount) return;
-            
+            if (_readyPlayers.Count < _playerCount) return;
+            if (_readyPlayers.Count > _playerCount){
+                Debug.LogWarning($"FinishedResultPhase was called too often!");
+                return;
+            }
             StartLobbyStage();
-            _readyPlayers.Clear();
         }
 
         private void StartLobbyStage()

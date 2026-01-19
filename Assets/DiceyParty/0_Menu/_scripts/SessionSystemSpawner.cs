@@ -10,8 +10,8 @@ namespace DiceyParty.Menu
 {
     public class SessionSystemSpawner : NetworkBehaviour
     {
-        public string _sessionId = "empty";
-        public bool _isHost;
+        public Session Session;
+        public bool ClientIsHost;
         [SerializeField] private GameObject _sessionSystemPrefab;
         [SerializeField] private Button _startButton;
         [SerializeField] private bool _isTester;
@@ -28,8 +28,8 @@ namespace DiceyParty.Menu
         public override void OnStartClient()
         {
             base.OnStartClient();
-            if(_isTester || !_isHost) return;
-            StartSession(_sessionId);
+            if(_isTester || !ClientIsHost) return;
+            StartSession(Session);
         }
 
         private void SpawnSessionSystem()
@@ -39,17 +39,22 @@ namespace DiceyParty.Menu
         }
         
         [ServerRpc (RequireOwnership = false)]
-        private void StartSession(string sessionId)
+        private void StartSession(Session session)
         {
-            SessionDataSystem.Instance.SetSessionId(sessionId);
+            SessionDataSystem.Instance.SetSession(session);
             SessionStageSystem.ChangeState(SessionStage.Lobby);
         }
 
         private void StartSessionTest()
         {
             if (!IsServerInitialized) throw new Exception("method must only be called on the server");
-            
-            SessionDataSystem.Instance.SetSessionId("test");
+
+            Session session = new()
+            {
+                Name = "testSession",
+                DeploymentId = "test"
+            };
+            SessionDataSystem.Instance.SetSession(session);
             SessionStageSystem.ChangeState(SessionStage.Lobby);
 
         }

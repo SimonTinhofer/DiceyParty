@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using FishNet.Connection;
 using FishNet.Managing.Scened;
 using FishNet.Object;
@@ -20,6 +21,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
         private int[] _chestAmounts;
         private int _playerCount;
         private int _currentRound;
+        private int _clientId;
         
         public override void OnStartServer()
         {
@@ -32,6 +34,12 @@ namespace DiceyParty.MiniGame.CoinDilemma
             }
         }
 
+        public override void OnStartClient()
+        {
+            base.OnStartClient();
+            _clientId = LocalConnection.ClientId;
+        }
+
         private void OnDestroy()
         {
             SceneManager.OnClientPresenceChangeEnd -= SpawnPlayerScore;
@@ -40,6 +48,8 @@ namespace DiceyParty.MiniGame.CoinDilemma
 
         private void SpawnPlayerScore(ClientPresenceChangeEventArgs args)
         {
+            if (!SessionDataSystem.Instance.GetClientIds().Contains(args.Connection.ClientId))
+                return;
             NetworkConnection conn = args.Connection;
             NetworkObject nob = NetworkManager.GetPooledInstantiated(_playerScorePrefab,  true);
             NetworkManager.ServerManager.Spawn(nob, conn);
@@ -68,11 +78,34 @@ namespace DiceyParty.MiniGame.CoinDilemma
         [ObserversRpc (BufferLast = true)]
         private void StartRoundObserver(int[] chestContent)
         {
-            int clientId = ClientManager.Connection.ClientId;
-            int colorIndex = SessionDataSystem.Instance.GetPlayerData()[clientId].ColorIndex;
+            int colorIndex = SessionDataSystem.Instance.GetPlayerData()[_clientId].ColorIndex;
             Color ownerColor = _globalConfig.Colors[colorIndex];
             UIManager.Instance.GenerateChests(chestContent, ownerColor);
             UIManager.Instance.StartTimer(_gameConfig.RoundDecisionPhaseDuration);
+            TryHandleDecisionPhase(_gameConfig.RoundDecisionPhaseDuration);
+        }
+
+        private async void TryHandleDecisionPhase(float duration)
+        {
+            try
+            {
+                await HandleDecisionPhase(duration);
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"{this.name}.HandleGamePhase failed: {e.Message}");
+            }
+        }
+
+        private async Awaitable HandleDecisionPhase(float duration)
+        {
+            await Awaitable.WaitForSecondsAsync(duration, destroyCancellationToken);
+            int chestIndex = UIManager.Instance.GetChestIndex();
+            PassClientsChestIndex(_clientId, chestIndex);
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -113,13 +146,29 @@ namespace DiceyParty.MiniGame.CoinDilemma
             {
                 _playerScores[pair.Key].SetCoinAmount(pair.Value);
             }
-            FinishRound(chestsToCrossOut);
+            TryFinishRound(chestsToCrossOut);
         }
 
-        private async void FinishRound(List<int> chestsToCrossOut)
+        private async void TryFinishRound(List<int> chestsToCrossOut)
+        {
+            try
+            {
+                await FinishRound(chestsToCrossOut);
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"{this.name}.FinishRound failed: {e.Message}");
+            }
+        }
+
+        private async Awaitable FinishRound(List<int> chestsToCrossOut)
         {
             ShowChoicesObservers(_playerChoices, chestsToCrossOut);
-            await Awaitable.WaitForSecondsAsync(_gameConfig.RoundResultPhaseDuration);
+            await Awaitable.WaitForSecondsAsync(_gameConfig.RoundResultPhaseDuration, destroyCancellationToken);
             _playerChoices.Clear();
             if(_currentRound < _gameConfig.RoundCount)
                 StartRound();
@@ -127,7 +176,6 @@ namespace DiceyParty.MiniGame.CoinDilemma
             {
                 FinishMiniGame();
             }
-
         }
 
         private void FinishMiniGame()

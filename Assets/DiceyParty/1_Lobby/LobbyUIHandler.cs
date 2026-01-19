@@ -9,7 +9,7 @@ namespace DiceyParty.Lobby
     {
         public static Transform PlayerCardParent;
         
-        [SerializeField] private TMP_Text _sessionId;
+        [SerializeField] private TMP_Text _sessionName;
         [SerializeField] private Button _leaveButton;
         [SerializeField] private Button _editNameButton;
         [SerializeField] private Button _playButton;
@@ -108,9 +108,9 @@ namespace DiceyParty.Lobby
             LobbyManager.LeaveSession();
         }
 
-        public void SetSessionId(string sessionId)
+        public void SetSessionName(string sessionName)
         {
-            _sessionId.text = "Id: " + sessionId;
+            _sessionName.text = "Id: " + sessionName;
         }
     }
 }

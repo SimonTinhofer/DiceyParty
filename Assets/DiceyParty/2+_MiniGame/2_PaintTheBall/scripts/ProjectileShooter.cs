@@ -1,5 +1,6 @@
 using FishNet.Object;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -41,10 +42,21 @@ namespace DiceyParty.MiniGame.PaintTheBall
 
         private async void StartShooting()
         {
-            while (_shootingEnabled)
+            try
             {
-                ShootProjectile();
-                await Awaitable.WaitForSecondsAsync(_gameConfig.ShootingCooldown);
+                while (_shootingEnabled)
+                {
+                    await Awaitable.WaitForSecondsAsync(_gameConfig.ShootingCooldown, destroyCancellationToken);
+                    ShootProjectile();
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"StartShooting failed: {e.Message}");
             }
         }
 
@@ -52,6 +64,8 @@ namespace DiceyParty.MiniGame.PaintTheBall
 
         private void ShootProjectile()
         {
+            if (!IsClientStarted || !IsOwner) return;
+            
             float force =  _gameConfig.ShootingForce;
             Vector3 direction = _projectileSpawnPoint.forward;
             GameObject proj = Instantiate(_projectilePrefab, _projectileSpawnPoint.position, Quaternion.identity);

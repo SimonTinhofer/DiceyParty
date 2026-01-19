@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2970044174318432344}
   - component: {fileID: 5328248440691610148}
   - component: {fileID: 2657100333323025607}
+  - component: {fileID: 3284685145876465476}
   m_Layer: 0
   m_Name: SessionSystem
   m_TagString: Untagged
@@ -46,9 +47,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d615af74a3e2914ebfe8b906fe2e49c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty::DiceyParty.SessionStageSystem
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 5328248440691610148}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 5328248440691610148}
 --- !u!114 &5328248440691610148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -67,7 +68,9 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 2970044174318432344}
+  - {fileID: 2657100333323025607}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -78,7 +81,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584331097631671297
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -93,15 +96,15 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 19
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 17546934313120019461
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Position: {x: 817.75854, y: 0, z: 5851.701}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1
 --- !u!114 &2657100333323025607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -114,7 +117,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91f07f51924969d4d9afeb854e860d2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 5328248440691610148}
+  _networkObjectCache: {fileID: 5328248440691610148}
+  _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}
+--- !u!114 &3284685145876465476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3033259187467686524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1f927788e048c2b92a180fc01b2047, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty::DiceyParty.SessionConnectionSystem
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 0}
   _networkObjectCache: {fileID: 0}
   _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}

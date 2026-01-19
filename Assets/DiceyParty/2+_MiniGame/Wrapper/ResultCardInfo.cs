@@ -2,21 +2,16 @@
 {
     public class ResultCardInfo
     {
-        public ResultCardInfo()
-        {
-        }
+        public readonly string Name;
+        public readonly int Placement;
+        public readonly int ColorIndex;
+        public ResultCardInfo(){}
 
-        public ResultCardInfo(string name, int placement/*, int receivedDice, int receivedItem*/)
+        public ResultCardInfo(string name, int placement, int colorIndex)
         {
             Name = name;
             Placement = placement;
-            /*ReceivedDice = receivedDice;
-            ReceivedItem = receivedItem;*/
+            ColorIndex = colorIndex;
         }
-
-        public string Name;
-        public int Placement;
-        /*public int ReceivedDice;
-        public int ReceivedItem;*/
     }
 }

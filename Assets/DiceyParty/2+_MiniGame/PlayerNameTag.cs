@@ -12,7 +12,7 @@ namespace DiceyParty.MiniGame
         public override void OnStartClient()
         {
             base.OnStartClient();
-            _nameTag.text = SessionDataSystem.Instance.GetPlayerData()[OwnerId].PlayerName;
+            _nameTag.text = SessionDataSystem.Instance.GetPlayerData()[OwnerId].Name;
         }
     }
 }

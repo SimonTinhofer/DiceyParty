@@ -44,6 +44,7 @@ namespace DiceyParty.MiniGame.RollOff
         
         private void SpawnPlayer(ClientPresenceChangeEventArgs args)
         {
+            if (!SessionDataSystem.Instance.GetClientIds().Contains(args.Connection.ClientId)) return;
             NetworkConnection conn = args.Connection;
             NetworkObject nob = NetworkManager.GetPooledInstantiated(_playerPrefab, Spawnpoint.transform.position, Quaternion.identity, true);
             NetworkManager.ServerManager.Spawn(nob, conn);
@@ -57,14 +58,31 @@ namespace DiceyParty.MiniGame.RollOff
         [ObserversRpc]
         private void StartGameObserver()
         {
-            UIManager.Instance.StartTimer(_gameConfig.GameDuration);
-            OnTogglePlayerControls?.Invoke(true);
-            TimeGamePhase();
+            TryStartGame();
+
         }
 
-        private async void TimeGamePhase()
+        private async void TryStartGame()
         {
-            await Awaitable.WaitForSecondsAsync(_gameConfig.GameDuration);
+            try
+            {
+                await HandleGamePhase();
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"{this.name}.HandleGamePhase failed: {e.Message}");
+            }
+        }
+
+        private async Awaitable HandleGamePhase()
+        {
+            UIManager.Instance.StartTimer(_gameConfig.GameDuration);
+            OnTogglePlayerControls?.Invoke(true);
+            await Awaitable.WaitForSecondsAsync(_gameConfig.GameDuration, destroyCancellationToken);
             EndGamePhase();
         }
 

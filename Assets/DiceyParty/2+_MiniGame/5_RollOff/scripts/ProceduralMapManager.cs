@@ -66,10 +66,15 @@ namespace DiceyParty.MiniGame.RollOff
                 _currentDirectionIndex = (_currentDirectionIndex + 1) % 2;
             }
             
-            if (lastWaypoint.x + _directions[_currentDirectionIndex].x * _gameConfig.MaxWaypointDistanceMultiplyer > _gameConfig.LateralBoundary || lastWaypoint.x - _directions[_currentDirectionIndex].x * _gameConfig.MaxWaypointDistanceMultiplyer < -_gameConfig.LateralBoundary)
+            if (lastWaypoint.x + _directions[_currentDirectionIndex].x * _gameConfig.MaxWaypointDistanceMultiplyer > _gameConfig.LateralBoundary)
             {
-                _currentDirectionIndex = (_currentDirectionIndex + 1) % 2;
+                _currentDirectionIndex = 0;
             }
+            else if (lastWaypoint.x + _directions[_currentDirectionIndex].x * _gameConfig.MaxWaypointDistanceMultiplyer < -_gameConfig.LateralBoundary)
+            {
+                _currentDirectionIndex = 1;
+            }
+            
             return lastWaypoint + _directions[_currentDirectionIndex] * UnityEngine.Random.Range(_gameConfig.MinBlockWaypointDistanceMultiplayer, _gameConfig.MaxWaypointDistanceMultiplyer);
         }
 

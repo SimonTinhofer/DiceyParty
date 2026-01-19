@@ -22,3 +22,4 @@ MonoBehaviour:
   - {r: 0, g: 1, b: 1, a: 1}
   TutorialDuration: 3
   ResultsDuration: 3
+  MaxNameLength: 10

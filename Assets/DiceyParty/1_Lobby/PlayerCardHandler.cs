@@ -21,11 +21,11 @@ namespace DiceyParty.Lobby
             if(IsOwner)
                     transform.SetAsFirstSibling();
         }
-
+        
         public void SetupServer(PlayerInfo playerInfo)
         {
-            if (!IsServerInitialized) throw new Exception("method must be called on Server");
-            string playerNameText  = playerInfo.IsHost ? $"Name: {playerInfo.PlayerName} (Host)" : $"Name: {playerInfo.PlayerName}";
+            if (!IsServerInitialized) return;
+            string playerNameText  = playerInfo.IsHost ? $"Name: {playerInfo.Name} (Host)" : $"Name: {playerInfo.Name}";
             _playerName.text = playerNameText;
             _colorImage.color = _globalConfig.Colors[playerInfo.ColorIndex];
             
