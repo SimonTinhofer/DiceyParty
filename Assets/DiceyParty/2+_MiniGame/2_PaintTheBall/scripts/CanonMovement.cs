@@ -43,12 +43,12 @@ namespace DiceyParty.MiniGame.PaintTheBall
             cam.transform.rotation = _camTransform.rotation;
             cam.transform.parent = _camTransform;
 
-            PaintTheBallManager.TogglePlayerControls += ToggleControls;
+            PaintTheBallManager.ToggleGamePhase += ToggleControls;
         }
 
         private void OnDestroy()
         {
-            PaintTheBallManager.TogglePlayerControls -= ToggleControls;
+            PaintTheBallManager.ToggleGamePhase -= ToggleControls;
         }
 
         private void ToggleControls(bool toggle)

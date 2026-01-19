@@ -354,7 +354,7 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
+    m_Strength: 0.7
     m_Bias: 0.05
     m_NormalBias: 0.4
     m_NearPlane: 0.2
@@ -388,7 +388,7 @@ Light:
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 5000
+  m_ColorTemperature: 5500
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
@@ -431,7 +431,7 @@ MonoBehaviour:
   m_CustomShadowLayers: 0
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
-  m_SoftShadowQuality: 1
+  m_SoftShadowQuality: 0
   m_RenderingLayersMask:
     serializedVersion: 0
     m_Bits: 1
@@ -778,17 +778,42 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4545923555171672602}
     m_Modifications:
+    - target: {fileID: 508790878696968694, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1539968263500903757, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_text
-      value: Template MiniGame
+      value: GrabABox
       objectReference: {fileID: 0}
     - target: {fileID: 2774148364310193422, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 89cc97401eb588a408315f5fa0148929, type: 3}
+      objectReference: {fileID: 21300000, guid: 63d910d853e992445a3ff526c02299f2, type: 3}
     - target: {fileID: 4203899990597644362, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_Name
       value: MiniGameWrapper
+      objectReference: {fileID: 0}
+    - target: {fileID: 5881570593530710044, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350934907042782254, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
+      propertyPath: m_text
+      value: 'Controls: Touch / MB1
+
+
+        Description: Grab a Box before the
+        other players do, so you get to live another round. Your caracter will move
+        towards the point on you last clicked. Last player wins.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350934907042782254, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
+      propertyPath: m_fontSize
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350934907042782254, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7768586561978356548, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_Pivot.x

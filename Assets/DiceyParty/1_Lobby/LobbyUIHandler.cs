@@ -7,7 +7,7 @@ namespace DiceyParty.Lobby
 {
     public class LobbyUIHandler : MonoBehaviour
     {
-        public static Transform PlayerCardParent;
+        private static LobbyUIHandler _instance;
         
         [SerializeField] private TMP_Text _sessionName;
         [SerializeField] private Button _leaveButton;
@@ -28,7 +28,15 @@ namespace DiceyParty.Lobby
 
         private void Awake()
         {
-            PlayerCardParent = _playerCardParent;
+            if (_instance != null)
+                Destroy(gameObject);
+            else
+                _instance = this;
+        }
+
+        public static Transform GetPlayerCardParent()
+        {
+            return _instance._playerCardParent;
         }
 
         private void Start()

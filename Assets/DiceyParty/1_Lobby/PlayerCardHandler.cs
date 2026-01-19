@@ -14,10 +14,14 @@ namespace DiceyParty.Lobby
         [SerializeField] private Color _cardOwnerColor;
         [SerializeField] private GlobalConfigSO _globalConfig;
 
+        private void Start()
+        {
+            transform.SetParent(LobbyUIHandler.GetPlayerCardParent(), false);
+        }
+
         public override void OnStartClient()
         {
             base.OnStartClient();
-            transform.SetParent(LobbyUIHandler.PlayerCardParent, false);
             if(IsOwner)
                     transform.SetAsFirstSibling();
         }

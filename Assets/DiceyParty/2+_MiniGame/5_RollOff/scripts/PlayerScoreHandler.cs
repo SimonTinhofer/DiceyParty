@@ -1,4 +1,5 @@
-﻿using FishNet.Object;
+﻿using System;
+using FishNet.Object;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,9 +13,13 @@ namespace DiceyParty.MiniGame.RollOff
         [SerializeField] private GlobalConfigSO _globalConfig;
         [SerializeField] private Transform _scoreTransform;
 
-        public override void OnStartClient()
+        private void Start()
         {
             _scoreTransform.SetParent(UIManager.Instance.GetScoreParent(), false);
+        }
+
+        public override void OnStartClient()
+        {
             base.OnStartClient();
             int colorIndex = SessionDataSystem.Instance.GetPlayerData()[OwnerId].ColorIndex;
             Color bgColor = _globalConfig.Colors[colorIndex];

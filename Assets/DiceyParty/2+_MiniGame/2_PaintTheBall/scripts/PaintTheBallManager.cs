@@ -11,7 +11,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
 {
     public class PaintTheBallManager : NetworkBehaviour
     {
-        public static Action<bool> TogglePlayerControls;
+        public static Action<bool> ToggleGamePhase;
         
         private readonly HashSet<int> _readyPlayers = new();
         private readonly SyncVar<int> _playerCount = new SyncVar<int>();
@@ -54,7 +54,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         {
             SceneManager.OnClientPresenceChangeEnd -= SpawnPlayer;
             MiniGameManager.OnStartGamePhase -= OnStartGamePhase;
-            TogglePlayerControls = null;
+            ToggleGamePhase = null;
         }
 
         private async void OnStartGamePhase()
@@ -77,9 +77,9 @@ namespace DiceyParty.MiniGame.PaintTheBall
         private async Awaitable HandleGamePhase()
         {
             UIManager.StartTimer(_paintTheBallConfig.GameDuration);
-            TogglePlayerControls.Invoke(true);
+            ToggleGamePhase.Invoke(true);
             await Awaitable.WaitForSecondsAsync(_paintTheBallConfig.GameDuration, destroyCancellationToken);
-            TogglePlayerControls.Invoke(false);
+            ToggleGamePhase.Invoke(false);
             FinishedGamePhase(_clientId);
         }
 

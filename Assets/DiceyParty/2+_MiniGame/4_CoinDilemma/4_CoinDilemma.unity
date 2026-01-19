@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 208692286}
   - component: {fileID: 208692287}
   m_Layer: 0
-  m_Name: Managers
+  m_Name: NetworkedManagers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -881,7 +881,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1469281863}
   - component: {fileID: 1469281865}
-  - component: {fileID: 1469281864}
   m_Layer: 0
   m_Name: CoinDilemmaManager
   m_TagString: Untagged
@@ -904,23 +903,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 208692286}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1469281864
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1469281862}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8245c49ba6884e0dbc9da36973b7cb60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.CoinDilemma.UIManager
-  PlayerScoreParent: {fileID: 816915815}
-  _coinDilemmaManager: {fileID: 1469281865}
-  _chestPrefab: {fileID: 7912515870263363902, guid: 21001abb537775648999f9dfa87d8715, type: 3}
-  _chestContainerTransform: {fileID: 982392342}
-  _timerText: {fileID: 1613122759}
 --- !u!114 &1469281865
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -939,6 +921,55 @@ MonoBehaviour:
   _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}
   _gameConfig: {fileID: 11400000, guid: df0fff550acf53b4897b0147f6e9d116, type: 2}
   _playerScorePrefab: {fileID: 1595784523852520499, guid: 0e990448b1288ae4eae88dce41066565, type: 3}
+--- !u!1 &1573448850
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1573448852}
+  - component: {fileID: 1573448851}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1573448851
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573448850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8245c49ba6884e0dbc9da36973b7cb60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.CoinDilemma.UIManager
+  PlayerScoreParent: {fileID: 816915815}
+  _coinDilemmaManager: {fileID: 1469281865}
+  _chestPrefab: {fileID: 7912515870263363902, guid: 21001abb537775648999f9dfa87d8715, type: 3}
+  _chestContainerTransform: {fileID: 982392342}
+  _timerText: {fileID: 1613122759}
+--- !u!4 &1573448852
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573448850}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1000, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1613122757
 GameObject:
   m_ObjectHideFlags: 0
@@ -996,7 +1027,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: 00:00
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1165,15 +1196,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1539968263500903757, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_text
-      value: Template MiniGame
+      value: 'CoinDilemma
+
+'
       objectReference: {fileID: 0}
     - target: {fileID: 2774148364310193422, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 89cc97401eb588a408315f5fa0148929, type: 3}
+      objectReference: {fileID: 21300000, guid: 7e35f28609292f9448e69b8cd7c8db39, type: 3}
     - target: {fileID: 4203899990597644362, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_Name
       value: MiniGameWrapper
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350934907042782254, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
+      propertyPath: m_text
+      value: 'Controls: Touch / MB1
+
+
+        Description: Every round you can pick
+        a chest. If you are the only one who choose that chest you will get the number
+        of coins written on to it. Otherwise you will get nothing. The player with
+        the most coins at the end of the game wins.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350934907042782254, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
+      propertyPath: m_fontSize
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350934907042782254, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7768586561978356548, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_Pivot.x
@@ -1540,6 +1591,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 607279906}
   - {fileID: 386036835}
+  - {fileID: 1573448852}
   - {fileID: 208692286}
   - {fileID: 680187424}
   - {fileID: 515293429}

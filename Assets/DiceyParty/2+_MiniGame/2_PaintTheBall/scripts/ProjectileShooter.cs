@@ -24,12 +24,12 @@ namespace DiceyParty.MiniGame.PaintTheBall
 
             _fireAction = InputSystem.actions.FindAction("Attack");
 
-            PaintTheBallManager.TogglePlayerControls += ToggleShooting;
+            PaintTheBallManager.ToggleGamePhase += ToggleShooting;
         }
         
         private void OnDestroy()
         {
-            PaintTheBallManager.TogglePlayerControls -= ToggleShooting;
+            PaintTheBallManager.ToggleGamePhase -= ToggleShooting;
         }
 
         private void ToggleShooting(bool toggle)

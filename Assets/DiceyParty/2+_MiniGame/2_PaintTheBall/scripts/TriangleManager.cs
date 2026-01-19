@@ -24,11 +24,18 @@ namespace DiceyParty.MiniGame.PaintTheBall
                 throw new Exception("Instance should be null");
             }
             _instance = this;
+            PaintTheBallManager.ToggleGamePhase += OnToggleGamePhase;
         }
 
-        public override void OnStartClient()
+        private void OnDestroy()
         {
-            base.OnStartClient();
+            PaintTheBallManager.ToggleGamePhase -= OnToggleGamePhase;
+        }
+
+        private void OnToggleGamePhase(bool toggle)
+        {
+            if(toggle)
+                PaintTheBallManager.ToggleGamePhase -= OnToggleGamePhase;
             _clientId = ClientManager.Connection.ClientId;
             _startTime = Time.time;
             AddPlayerTriangleCount(_clientId);

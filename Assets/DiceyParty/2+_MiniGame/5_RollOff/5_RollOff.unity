@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 208692286}
   - component: {fileID: 208692287}
   m_Layer: 0
-  m_Name: Managers
+  m_Name: NetworkedManagers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -806,7 +806,6 @@ GameObject:
   - component: {fileID: 884634925}
   - component: {fileID: 884634926}
   - component: {fileID: 884634927}
-  - component: {fileID: 884634928}
   m_Layer: 0
   m_Name: RollOffManagers
   m_TagString: Untagged
@@ -865,20 +864,6 @@ MonoBehaviour:
   Spawnpoint: {fileID: 2726014771175385569}
   _gameConfig: {fileID: 11400000, guid: e485f64e527f24b418a903e45dda6c5e, type: 2}
   _playerPrefab: {fileID: 5717454154923554291, guid: a83a153b358dc7a43a92f53bc3dc5fdd, type: 3}
---- !u!114 &884634928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 884634924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67759555a2de43ad960fd8b5e9483e68, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DiceyParty.MiniGame.RollOff::DiceyParty.MiniGame.RollOff.UIManager
-  _timerText: {fileID: 1781617965}
-  _scoreParent: {fileID: 537404061}
 --- !u!1 &1183247522
 GameObject:
   m_ObjectHideFlags: 0
@@ -1520,6 +1505,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1781617963}
   m_CullTransparentMesh: 1
+--- !u!1 &1888218388
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1888218390}
+  - component: {fileID: 1888218389}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1888218389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888218388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67759555a2de43ad960fd8b5e9483e68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty.MiniGame.RollOff::DiceyParty.MiniGame.RollOff.UIManager
+  _timerText: {fileID: 1781617965}
+  _scoreParent: {fileID: 537404061}
+--- !u!4 &1888218390
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1888218388}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &336515929413447286
 Transform:
   m_ObjectHideFlags: 0
@@ -1719,7 +1750,7 @@ PrefabInstance:
     - target: {fileID: 2774148364310193422, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 89cc97401eb588a408315f5fa0148929, type: 3}
+      objectReference: {fileID: 21300000, guid: 1d13d6729260b714db58189f4513e342, type: 3}
     - target: {fileID: 4203899990597644362, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_Name
       value: MiniGameWrapper
@@ -1727,6 +1758,24 @@ PrefabInstance:
     - target: {fileID: 4203899990597644362, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350934907042782254, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
+      propertyPath: m_text
+      value: 'Controls: Buttons / A-D
+
+
+        Description: Try to get as far as
+        possible without rolling off the path. You will get faster and the path will
+        get thinner the further you get. When the time runs out the player with the
+        highest score will win.'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350934907042782254, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
+      propertyPath: m_fontSize
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 7350934907042782254, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7768586561978356548, guid: 572c212c34372984b8720c72b9f4914d, type: 3}
       propertyPath: m_Pivot.x
@@ -2210,6 +2259,10 @@ PrefabInstance:
       propertyPath: SceneId
       value: 3221225343
       objectReference: {fileID: 0}
+    - target: {fileID: 5790971109695940896, guid: de3908fa2ce993447b2d0d84b5d07d6a, type: 3}
+      propertyPath: WasActiveDuringEdit
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2290,5 +2343,6 @@ SceneRoots:
   - {fileID: 607279906}
   - {fileID: 386036835}
   - {fileID: 208692286}
+  - {fileID: 1888218390}
   - {fileID: 680187424}
   - {fileID: 5715889913070750439}
