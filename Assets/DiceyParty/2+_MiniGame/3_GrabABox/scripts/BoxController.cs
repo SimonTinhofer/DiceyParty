@@ -11,12 +11,14 @@ namespace DiceyParty.MiniGame.GrabABox
         [SerializeField] private GlobalConfigSO _globalConfig;
         [SerializeField] private Rigidbody _rigidbody;
 
+        private bool _triggered;
         private int _ownerID = -1;
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag(_playerTag))
+            if (other.CompareTag(_playerTag) && !_triggered)
             {
+                _triggered = true;
                 ClaimedByClient(ClientManager.Connection.ClientId);
             }
         }
