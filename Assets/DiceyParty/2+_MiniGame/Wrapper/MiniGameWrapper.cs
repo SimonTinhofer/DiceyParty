@@ -15,12 +15,18 @@ namespace DiceyParty.MiniGame
 
         private void Awake()
         {
-            _tutorialPanel.SetActive(true);
+            _tutorialPanel.SetActive(false);
             _resultsPanel.SetActive(false);
+        }
+
+        public void DisableTutorialPanel()
+        {
+            _tutorialPanel.SetActive(false);
         }
         
         public async Awaitable TutorialPhase(CancellationToken callerToken)
         {
+            _tutorialPanel.SetActive(true);
             using var linkedSource = CancellationTokenSource.CreateLinkedTokenSource(callerToken, destroyCancellationToken);
             _tutorialPanel.SetActive(true);
             await Awaitable.WaitForSecondsAsync(_globalConfig.TutorialDuration, linkedSource.Token);

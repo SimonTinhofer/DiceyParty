@@ -181,7 +181,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
         private void FinishMiniGame()
         {
             var orderedCoinAmounts = _playerCoinAmounts.OrderByDescending(pair => pair.Value);
-            Dictionary<int, int> placements = orderedCoinAmounts.Select((pair, index) => new { pair.Key, Rank = orderedCoinAmounts.Count(p => p.Value > pair.Value) }).ToDictionary(pair => pair.Key, pair => pair.Rank);
+            Dictionary<int, int> placements = orderedCoinAmounts.Select(pair => new { pair.Key, Rank = orderedCoinAmounts.Count(p => p.Value > pair.Value) }).ToDictionary(pair => pair.Key, pair => pair.Rank);
             SceneManager.OnClientPresenceChangeEnd -= SpawnPlayerScore;
             MiniGameManager.FinishedGamePhase(placements);
         }

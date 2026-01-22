@@ -6,5 +6,9 @@ namespace DiceyParty.MiniGame.QuickMath
     public class QuickMathConfigSO : ScriptableObject
     {
         public float Speed = 5f;
+        public int ShowCalculationDelay = 1;
+        public int ShowResultsDelay = 3;
+        public int RemoveFalseTilesDelay = 4;
+        public int StartNewRoundDelay = 3;
     }
 }

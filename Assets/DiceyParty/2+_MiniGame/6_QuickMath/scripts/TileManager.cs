@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using FishNet.Managing;
 using FishNet.Object;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -10,54 +11,57 @@ namespace DiceyParty.MiniGame.QuickMath
 {
     public class TileManager : NetworkBehaviour
     {
+        [SerializeField] private GameObject _tileBridge;
         [SerializeField] private List<TileHandler> _tileHandler;
-        [SerializeField] private TMP_Text _calculation;
         private Dictionary<int, int> _tileNumbers;
-        private int _calcIndex;
+        private int _calculationIndex;
         private int _numberMultiplayer;
         private float _correctResult;
         private bool _negativeNums;
-
-        public override void OnStartServer()
+        private CalculationData _currentCalculationData;
+        
+        //Setup => Restore Tiles set Text to
+        //GenerateRoundData => Show Calculation
+        //Show Results
+        //Remove WrongResultTiles
+        
+        public void SetupRound()
         {
-            base.OnStartServer();
-            RoundCycler();
-        }
-
-        //nur zum Testen, Rounds werden im fertigen MiniGame dann von anderen QuickMathManager gestartet werden
-        private async void RoundCycler()
-        {
-            while (true)
-            {
-                StartRound();
-                await Awaitable.WaitForSecondsAsync(10);
-                EndRoundObservers();
-                await Awaitable.WaitForSecondsAsync(5);
-            }
-        }
-
-        [Server]
-        private void StartRound()
-        {
-            if(_calcIndex % 6 == 0)
-                _numberMultiplayer++;
-            if(_calcIndex > 5 && !_negativeNums)
-                _negativeNums = true;
-            
-            var calculationData = GenerateRoundData(_calcIndex, 10 * _numberMultiplayer);
-            SetupRoundObserver(calculationData);
-            _calcIndex++;
+            SetupRoundObserver();
         }
         
-        private RoundData GenerateRoundData(int calcIndex, int range)
+        [ObserversRpc(RunLocally = true, BufferLast = true)]
+        private void SetupRoundObserver()
         {
-            var calculation = "error";
+            _tileBridge.gameObject.SetActive(true);
+            for(int i = 0; i < _tileHandler.Count; i++)
+            {
+                var handler = _tileHandler[i];
+                handler.SetupTile();
+            }
+        }
+        
+        public string GenerateCalculation()
+        {
+            if(_calculationIndex % 6 == 0)
+                _numberMultiplayer++;
+            if(_calculationIndex > 5 && !_negativeNums)
+                _negativeNums = true;
+            
+            _currentCalculationData = GenerateCalculationData(10 * _numberMultiplayer);
+            _calculationIndex++;
+            return _currentCalculationData.Calculation;
+        }
+        
+        private CalculationData GenerateCalculationData(int range)
+        {
+            string calculation = "";
             var results = new List<float>();
             var correctResultIndex = Random.Range(0, _tileHandler.Count);
             for (var i = 0; i < _tileHandler.Count; i++)
             {
                 var randomNums = GenerateRandomNums(range, _negativeNums);
-                switch (_calcIndex % 6)
+                switch (_calculationIndex % 6)
                 {
                     case 0:
                         if (correctResultIndex == i)
@@ -93,7 +97,7 @@ namespace DiceyParty.MiniGame.QuickMath
                         throw new Exception("Wrong Input");
                 }
             }
-            return new RoundData(calculation, results, results[correctResultIndex]);
+            return new CalculationData(calculation, results, results[correctResultIndex]);
         }
 
         private int[] GenerateRandomNums(int range, bool negativeNums)
@@ -118,42 +122,37 @@ namespace DiceyParty.MiniGame.QuickMath
             return randomNums;
         }
 
-        [ObserversRpc(RunLocally = true, BufferLast = true)]
-        private void SetupRoundObserver(RoundData roundData)
+        public void ShowResults()
         {
-            for(int i = 0; i < _tileHandler.Count; i++)
-            {
-                var handler = _tileHandler[i];
-                handler.SetupTile(roundData.Results[i]);
-            }
-            _calculation.text = roundData.Calculation;
-            _correctResult = roundData.CorrectResult;
+            ShowResultsObserver(_currentCalculationData);
         }
         
         [ObserversRpc(RunLocally = true, BufferLast = true)]
-        private void EndRoundObservers()
+        private void ShowResultsObserver(CalculationData calculationData)
         {
+            _tileBridge.gameObject.SetActive(true);
+            for(int i = 0; i < _tileHandler.Count; i++)
+            {
+                var handler = _tileHandler[i];
+                handler.ShowResult(calculationData.Results[i]);
+            }
+            _correctResult = calculationData.CorrectResult;
+        }
+
+        public void RemoveFalseResults()
+        {
+            RemoveFalseResultsObserver();
+        }
+        
+        [ObserversRpc(RunLocally = true, BufferLast = true)]
+        private void RemoveFalseResultsObserver()
+        {
+            _tileBridge.gameObject.SetActive(false);
             for(int i = 0; i < _tileHandler.Count; i++)
             {
                 var handler = _tileHandler[i];
                 handler.CheckResult(_correctResult);
             }
-        }
-
-        public class RoundData
-        {
-            public readonly string Calculation;
-            public readonly List<float> Results;
-            public readonly float CorrectResult;
-
-            public RoundData(string calculation, List<float> results, float correctResult)
-            {
-                Calculation = calculation;
-                Results = results;
-                CorrectResult = correctResult;
-            }
-
-            public RoundData(){}
         }
     }
 }

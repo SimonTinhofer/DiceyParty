@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3434662569179043363}
   - component: {fileID: -2152060390597426758}
+  - component: {fileID: 3650151351335910236}
   - component: {fileID: 5790971109695940896}
-  - component: {fileID: 8962340758625239305}
   m_Layer: 0
   m_Name: MiniGameManager
   m_TagString: Untagged
@@ -49,8 +49,23 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 5790971109695940896}
   _networkObjectCache: {fileID: 5790971109695940896}
-  _resultsProcessor: {fileID: 8962340758625239305}
+  _resultsProcessor: {fileID: 0}
   _miniGameWrapper: {fileID: 0}
+--- !u!114 &3650151351335910236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3773862451957360621}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f280b5fd1e64fa4aa489216d8704d1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.MiniGameResultsProcessor
+  _componentIndexCache: 1
+  _addedNetworkObject: {fileID: 5790971109695940896}
+  _networkObjectCache: {fileID: 5790971109695940896}
 --- !u!114 &5790971109695940896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,7 +86,7 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: -2152060390597426758}
-  - {fileID: 8962340758625239305}
+  - {fileID: 3650151351335910236}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -82,7 +97,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584325935650049881
+  _initializedTimestamp: -8584324979631642556
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -106,18 +121,3 @@ MonoBehaviour:
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
---- !u!114 &8962340758625239305
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3773862451957360621}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f280b5fd1e64fa4aa489216d8704d1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.MiniGameResultsProcessor
-  _componentIndexCache: 1
-  _addedNetworkObject: {fileID: 5790971109695940896}
-  _networkObjectCache: {fileID: 5790971109695940896}

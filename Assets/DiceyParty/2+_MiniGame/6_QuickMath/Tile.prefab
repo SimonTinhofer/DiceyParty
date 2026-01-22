@@ -165,7 +165,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: -0.25, z: 0}
-  m_LocalScale: {x: 3.9, y: 0.5, z: 3.9}
+  m_LocalScale: {x: 3.5, y: 0.5, z: 3.5}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2266502930736015439}
@@ -245,8 +245,39 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.026, y: 1, z: 1.026}
+  m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &3181550585788212498
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3906725308848704314}
+  m_Layer: 0
+  m_Name: Spawnpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3906725308848704314
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3181550585788212498}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2266502930736015439}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3391707546270353078
 GameObject:
   m_ObjectHideFlags: 0
@@ -354,6 +385,7 @@ Transform:
   m_Children:
   - {fileID: 8700054888360179227}
   - {fileID: 3817593449063727101}
+  - {fileID: 3906725308848704314}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8848426294055428155
@@ -368,8 +400,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7e15f69a1f744e5b60285d7343d52f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.MiniGame.ColorChaos::DiceyParty.MiniGame.QuickMath.TileHandler
-  _collider: {fileID: 3948300013662310349}
-  _renderer: {fileID: 1822296335572115136}
+  _meshGo: {fileID: 2623061308388752917}
+  _canvasGo: {fileID: 6707063189160245404}
   _number: {fileID: 162744798500484355}
 --- !u!1 &5174286375829924262
 GameObject:
@@ -485,7 +517,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0.01}
-  m_SizeDelta: {x: 390, y: 390}
+  m_SizeDelta: {x: 350, y: 350}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &834635040280370067
 Canvas:

@@ -1,20 +1,33 @@
-﻿using TMPro;
+﻿using System.Text.RegularExpressions;
+using TMPro;
 using UnityEngine;
 
 namespace DiceyParty.MiniGame.QuickMath
 {
     public class TileHandler : MonoBehaviour
     {
-        [SerializeField] private Collider _collider;
-        [SerializeField] private Renderer _renderer;
+        [SerializeField] private GameObject _meshGo;
+        [SerializeField] private GameObject _canvasGo;
         [SerializeField] private TMP_Text _number;
         private string _resultString;
         private bool _isEnabled = true;
         
-        public void SetupTile(float result)
+        public void SetupTile()
+        {
+            _number.text = "?";
+            if(!_isEnabled)
+                ToggleTile(true);
+        }
+        
+        public void ShowResult(float result)
         {
             _resultString = ResultToString(result);
-            _number.text = _resultString;
+            var textToShow = _resultString;
+            if (_resultString[^3..] == ".00")
+            {
+                textToShow = _resultString[..^3];
+            }
+            _number.text = textToShow;
             if(!_isEnabled)
                 ToggleTile(true);
         }
@@ -29,8 +42,8 @@ namespace DiceyParty.MiniGame.QuickMath
         private void ToggleTile(bool toggle)
         {
             _isEnabled = toggle;
-            _collider.enabled = toggle;
-            _renderer.enabled = toggle;
+            _meshGo.SetActive(toggle);
+            _canvasGo.SetActive(toggle);
         }
 
         private string ResultToString(float result)

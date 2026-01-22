@@ -9,10 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8885015650603122147}
+  - component: {fileID: 8590015658942877827}
   - component: {fileID: 8933238796033886542}
   - component: {fileID: 8675028551589224432}
   - component: {fileID: 2166512681099274915}
   - component: {fileID: -5710283106929830485}
+  - component: {fileID: 7554828381893096931}
   m_Layer: 0
   m_Name: QuickMathPlayer
   m_TagString: Player
@@ -36,6 +38,33 @@ Transform:
   - {fileID: 8285917496058467990}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &8590015658942877827
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988249066123317977}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 1
 --- !u!136 &8933238796033886542
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -43,7 +72,7 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1988249066123317977}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 5279afe67245e4641af070c5a02df994, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -51,7 +80,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 0
   serializedVersion: 2
@@ -79,7 +108,6 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: 2166512681099274915}
-  - {fileID: 0}
   - {fileID: -5710283106929830485}
   - {fileID: 4769960670750985769}
   InitializedParentNetworkBehaviour: {fileID: 0}
@@ -92,7 +120,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584325932576738874
+  _initializedTimestamp: -8584324977137230442
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -140,8 +168,8 @@ MonoBehaviour:
   _useScaledTime: 1
   _interpolation: 2
   _extrapolation: 2
-  _enableTeleport: 0
-  _teleportThreshold: 1
+  _enableTeleport: 1
+  _teleportThreshold: 2
   _clientAuthoritative: 1
   _sendToOwner: 1
   _interval: 1
@@ -151,7 +179,7 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
-  _synchronizeRotation: 0
+  _synchronizeRotation: 1
   _rotationSnapping:
     X: 0
     Y: 0
@@ -174,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a4cd52ffbf24c5382cc0b8d2db4df4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.MiniGame.ColorChaos::DiceyParty.MiniGame.QuickMath.PointerWaypointMovement
-  _componentIndexCache: 2
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 8675028551589224432}
   _networkObjectCache: {fileID: 8675028551589224432}
   _gameConfig: {fileID: 11400000, guid: 355ec0753c3a20d419e1c293d1266b98, type: 2}
@@ -182,6 +210,26 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _body: {fileID: 8285917496058467990}
+  _collider: {fileID: 8933238796033886542}
+  _rb: {fileID: 8590015658942877827}
+--- !u!114 &7554828381893096931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1988249066123317977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23da681ccc624382a779fa6466b813f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.OwnerColor
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 8675028551589224432}
+  _networkObjectCache: {fileID: 0}
+  _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}
+  _renderer: {fileID: 27075785575855567}
+  _image: {fileID: 0}
 --- !u!1 &2436615708676698802
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,7 +454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 3
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 8675028551589224432}
   _networkObjectCache: {fileID: 8675028551589224432}
   _componentConfiguration: 0

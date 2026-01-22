@@ -38,6 +38,7 @@ namespace DiceyParty.MiniGame
         public override void OnStartServer()
         {
             _playerCount = SessionDataSystem.Instance.GetPlayerData().Count;
+            _miniGameWrapper.DisableTutorialPanel();
         }
 
         public override void OnStartClient()
