@@ -26,6 +26,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/DiceyParty/2+_MiniGame/5_RollOff/5_RollOff.unity
     guid: 6ddc90878a987954f8072c9a3e8f9fd2
+  - enabled: 1
+    path: Assets/DiceyParty/2+_MiniGame/6_QuickMath/6_QuickMath.unity
+    guid: 0a6e2aca827d35344bfcd23045b0ecac
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

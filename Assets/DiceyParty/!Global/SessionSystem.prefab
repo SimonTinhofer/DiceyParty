@@ -71,6 +71,7 @@ MonoBehaviour:
   NetworkBehaviours:
   - {fileID: 2970044174318432344}
   - {fileID: 2657100333323025607}
+  - {fileID: 3284685145876465476}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -81,7 +82,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584331097631671297
+  _initializedTimestamp: -8584325935650049881
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -96,7 +97,7 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 19
+  <PrefabId>k__BackingField: 20
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 17546934313120019461
   SceneId: 0
@@ -133,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4d1f927788e048c2b92a180fc01b2047, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty::DiceyParty.SessionConnectionSystem
-  _componentIndexCache: 255
-  _addedNetworkObject: {fileID: 0}
-  _networkObjectCache: {fileID: 0}
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 5328248440691610148}
+  _networkObjectCache: {fileID: 5328248440691610148}
   _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}

@@ -45,11 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d44883963aecbc044acc4345b6224981, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.Menu::DiceyParty.Menu.SessionSystemSpawner
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 5028624887810194186}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 5028624887810194186}
+  ClientIsHost: 0
   _sessionSystemPrefab: {fileID: 3033259187467686524, guid: 289cceed5a2d93241bc6129f3e3ed4bd, type: 3}
-  _spawnButton: {fileID: 0}
+  _startButton: {fileID: 0}
   _isTester: 0
 --- !u!114 &5028624887810194186
 MonoBehaviour:
@@ -69,7 +70,8 @@ MonoBehaviour:
   <ComponentIndex>k__BackingField: 0
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
-  NetworkBehaviours: []
+  NetworkBehaviours:
+  - {fileID: 1031442682359359475}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -80,7 +82,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: 0
+  _initializedTimestamp: -8584325935650049881
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -95,12 +97,12 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 65535
+  <PrefabId>k__BackingField: 7
   <SpawnableCollectionId>k__BackingField: 0
   <AssetPathHash>k__BackingField: 7878644712356510067
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: 0}
-    Rotation: {x: 0, y: 0, z: 0, w: 0}
-    Scale: {x: 0, y: 0, z: 0}
-    IsValid: 0
+    Position: {x: 817.75854, y: 0.00003, z: 5851.701}
+    Rotation: {x: 0, y: 0, z: 0, w: 1}
+    Scale: {x: 1, y: 1, z: 1}
+    IsValid: 1

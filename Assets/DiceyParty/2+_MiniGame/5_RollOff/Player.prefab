@@ -197,9 +197,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2836e36774ca1c4bbbee976e17b649c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: FishNet.Runtime::FishNet.Component.Transforming.NetworkTransform
-  _componentIndexCache: 255
+  _componentIndexCache: 4
   _addedNetworkObject: {fileID: 3506632144625219567}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 3506632144625219567}
   _componentConfiguration: 0
   _synchronizeParent: 0
   _packing:
@@ -426,8 +426,11 @@ MonoBehaviour:
   <PredictedSpawn>k__BackingField: {fileID: 0}
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 972900800475043108}
+  - {fileID: 5657645539160744097}
+  - {fileID: 7829834505340513732}
+  - {fileID: 89229222906366137}
+  - {fileID: 3433665011453801748}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -438,7 +441,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584332037295249546
+  _initializedTimestamp: -8584325935650049881
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -458,7 +461,7 @@ MonoBehaviour:
   <AssetPathHash>k__BackingField: 4499586580386586720
   SceneId: 0
   SerializedTransformProperties:
-    Position: {x: 0, y: 0, z: -5}
+    Position: {x: 0, y: 0, z: 0}
     Rotation: {x: 0, y: 0, z: 0, w: 1}
     Scale: {x: 1, y: 1, z: 1}
     IsValid: 1
@@ -488,9 +491,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23da681ccc624382a779fa6466b813f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.OwnerColor
-  _componentIndexCache: 255
+  _componentIndexCache: 0
   _addedNetworkObject: {fileID: 3506632144625219567}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 3506632144625219567}
   _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}
   _renderer: {fileID: 6653192519203036896}
   _image: {fileID: 0}
@@ -506,9 +509,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41d1c0ffc23d46e89de87bc5ebf4e633, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.MiniGame.RollOff::DiceyParty.MiniGame.RollOff.PlayerHandler
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 3506632144625219567}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 3506632144625219567}
   _collider: {fileID: 1938388631835400548}
   _gameConfig: {fileID: 11400000, guid: e485f64e527f24b418a903e45dda6c5e, type: 2}
   _rb: {fileID: 3458813822967619950}
@@ -526,9 +529,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd969870465e48089a8ece88f63c36b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.MiniGame.RollOff::DiceyParty.MiniGame.RollOff.PlayerScoreHandler
-  _componentIndexCache: 255
+  _componentIndexCache: 2
   _addedNetworkObject: {fileID: 3506632144625219567}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 3506632144625219567}
   _longestRunText: {fileID: 2239896660437837836}
   _bgImage: {fileID: 1406919649479148665}
   _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}
@@ -545,9 +548,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dcaaa8665b046678d2769712ba4020d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.PlayerNameTag
-  _componentIndexCache: 255
+  _componentIndexCache: 3
   _addedNetworkObject: {fileID: 3506632144625219567}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 3506632144625219567}
   _nameTag: {fileID: 6315003374679601235}
 --- !u!1 &8543706227888542920
 GameObject:
