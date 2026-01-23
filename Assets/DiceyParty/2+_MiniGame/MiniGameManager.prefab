@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3434662569179043363}
   - component: {fileID: -2152060390597426758}
-  - component: {fileID: 3650151351335910236}
+  - component: {fileID: 1890872277345038066}
   - component: {fileID: 5790971109695940896}
   m_Layer: 0
   m_Name: MiniGameManager
@@ -49,9 +49,9 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 5790971109695940896}
   _networkObjectCache: {fileID: 5790971109695940896}
-  _resultsProcessor: {fileID: 0}
+  _resultsProcessor: {fileID: 1890872277345038066}
   _miniGameWrapper: {fileID: 0}
---- !u!114 &3650151351335910236
+--- !u!114 &1890872277345038066
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,9 +63,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f280b5fd1e64fa4aa489216d8704d1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.MiniGameResultsProcessor
-  _componentIndexCache: 1
+  _componentIndexCache: 255
   _addedNetworkObject: {fileID: 5790971109695940896}
-  _networkObjectCache: {fileID: 5790971109695940896}
+  _networkObjectCache: {fileID: 0}
 --- !u!114 &5790971109695940896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,7 +86,7 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: -2152060390597426758}
-  - {fileID: 3650151351335910236}
+  - {fileID: 0}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}

@@ -13,3 +13,7 @@ MonoBehaviour:
   m_Name: QuickMathConfig
   m_EditorClassIdentifier: DiceyParty.MiniGame.ColorChaos::DiceyParty.MiniGame.QuickMath.QuickMathConfigSO
   Speed: 7.5
+  ShowCalculationDelay: 1
+  ShowResultsDelay: 4
+  RemoveFalseTilesDelay: 2
+  StartNewRoundDelay: 3
