@@ -63,9 +63,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f280b5fd1e64fa4aa489216d8704d1d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.MiniGameResultsProcessor
-  _componentIndexCache: 255
+  _componentIndexCache: 1
   _addedNetworkObject: {fileID: 5790971109695940896}
-  _networkObjectCache: {fileID: 0}
+  _networkObjectCache: {fileID: 5790971109695940896}
 --- !u!114 &5790971109695940896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -86,7 +86,7 @@ MonoBehaviour:
   <PredictedOwner>k__BackingField: {fileID: 0}
   NetworkBehaviours:
   - {fileID: -2152060390597426758}
-  - {fileID: 0}
+  - {fileID: 1890872277345038066}
   InitializedParentNetworkBehaviour: {fileID: 0}
   InitializedNestedNetworkObjects: []
   RuntimeParentNetworkBehaviour: {fileID: 0}
@@ -97,7 +97,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584324979631642556
+  _initializedTimestamp: -8584324188418558970
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0

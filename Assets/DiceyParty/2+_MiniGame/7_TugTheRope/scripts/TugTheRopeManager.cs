@@ -11,41 +11,81 @@ namespace DiceyParty.MiniGame.TugTheRope
 {
     public class TugTheRopeManager : NetworkBehaviour
     {
-        private Dictionary<int, Team> _playerTeam = new();
-        private Dictionary<int, int> _playerTugs = new();
-        private int _leftTeamTugs;
-        private int _rightTeamTugs;
+        public static TugTheRopeManager Instance;
+        
+        [SerializeField] private TugTheRopeConfig _gameConfig;
+        [SerializeField] private GraphicsManager _graphicsManager;
+        [SerializeField] private RopeController _ropeController;
+        private Dictionary<int, Team> _playerTeams = new();
+        private float _teamLeftMultiplayer = 1;
+        private float _teamRightMultiplayer = 1;
         private int _clientTugs;
 
         public override void OnStartServer()
         {
             base.OnStartServer();
+            if (Instance != null)
+                Destroy(gameObject);
+            else
+                Instance = this;
+            DecideTeams();
+            MiniGameManager.OnStartGamePhase += OnStartGamePhaseServer;
+        }
+
+        private void DecideTeams()
+        {
+            int playerCountTeamLeft = new();
+            int playerCountTeamRight = new();
             var clients = SessionDataSystem.Instance.GetClientIds();
             var shuffledClientIds  = clients.OrderBy(_ => Random.value).ToList();
+            int a = Random.Range(0, 2);
             for(int i = 0; i < shuffledClientIds.Count; i++)
             {
-                if(i % 2 == 0)
-                    _playerTeam.Add(shuffledClientIds[i], Team.LeftTeam);
+                if ((i + a) % 2 == 0)
+                {
+                    _playerTeams.Add(shuffledClientIds[i], Team.LeftTeam);
+                    playerCountTeamLeft++;
+                }
                 else
                 {
-                    _playerTeam.Add(shuffledClientIds[i], Team.RightTeam);
+                    _playerTeams.Add(shuffledClientIds[i], Team.RightTeam);
+                    playerCountTeamRight++;
+                }
+            }
+
+            if (playerCountTeamLeft != playerCountTeamRight)
+            {
+                if (_playerTeams.Count == 3)
+                {
+                    if (playerCountTeamLeft < playerCountTeamRight)
+                        _teamLeftMultiplayer = _gameConfig.BalancingMultiplyers[2];
+                    else
+                        _teamRightMultiplayer = _gameConfig.BalancingMultiplyers[2];
+                }
+                else if (_playerTeams.Count == 5)
+                {
+                    if (playerCountTeamLeft < playerCountTeamRight)
+                        _teamLeftMultiplayer = _gameConfig.BalancingMultiplyers[1];
+                    else
+                        _teamRightMultiplayer = _gameConfig.BalancingMultiplyers[1];
                 }
             }
         }
 
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
-            MiniGameManager.OnStartGamePhase += OnStartGamePhaseClient;
-            
-        }
-
         private void OnDestroy()
         {
-            MiniGameManager.OnStartGamePhase -= OnStartGamePhaseClient;
+            MiniGameManager.OnStartGamePhase -= OnStartGamePhaseServer;
             UIManager.OnTug -= ClientOnTug;
         }
-
+        
+        private void OnStartGamePhaseServer()
+        {
+            _ropeController.Setup(_playerTeams.Count);
+            _graphicsManager.ShowPlayers(_playerTeams, _teamLeftMultiplayer, _teamRightMultiplayer);
+            OnStartGamePhaseClient();
+        }
+        
+        [ObserversRpc (BufferLast = true)]
         private void OnStartGamePhaseClient()
         {
             UIManager.Instance.TogglePullButton(true);
@@ -61,20 +101,32 @@ namespace DiceyParty.MiniGame.TugTheRope
         [ServerRpc (RequireOwnership = false)]
         private void ServerOnTug(int clientId, int clientTugs)
         {
-            _playerTugs[clientId] = clientTugs;
-            if (_playerTeam[clientId] == Team.LeftTeam)
-                _leftTeamTugs++;
-            else if (_playerTeam[clientId] == Team.RightTeam)
-                _rightTeamTugs++;
-            ShowScoreObservers(_rightTeamTugs - _leftTeamTugs);
+            int id = clientId;
+            _graphicsManager.UpdateTugTextServer(clientId, clientTugs);
+            if (_playerTeams[id] == Team.LeftTeam)
+            {
+                _ropeController.ApplyForce(Vector3.left, _teamLeftMultiplayer);
+            }
+            else if (_playerTeams[id] == Team.RightTeam)
+            {
+                _ropeController.ApplyForce(Vector3.right, _teamRightMultiplayer);
+            }
         }
-
-        [ObserversRpc(RunLocally = true, BufferLast = true)]
-        private void ShowScoreObservers(int score)
+        
+        public void TeamWon(Team winnerTeam)
         {
-            UIManager.Instance.ShowScore(score);
+            Dictionary<int, int> placements = new();
+            foreach (var entry in _playerTeams)
+            {
+                if(entry.Value == winnerTeam)
+                    placements.Add(entry.Key, 0);
+                else
+                {
+                    placements.Add(entry.Key, 1);
+                }
+            }
+            MiniGameManager.FinishedGamePhase(placements);
         }
-
-        private enum Team {LeftTeam, RightTeam}
     }
+    public enum Team {LeftTeam, RightTeam}
 }

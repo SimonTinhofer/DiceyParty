@@ -58,18 +58,7 @@ namespace DiceyParty.MiniGame.PaintTheBall
         }
 
         private async void OnStartGamePhase()
-        {try
-            {
-                await HandleGamePhase();
-            }
-            catch (OperationCanceledException)
-            {
-                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"OnStartGamePhase loop failed: {e.Message}");
-            }
+        {
             try
             {
                 await HandleGamePhase();

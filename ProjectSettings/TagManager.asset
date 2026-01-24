@@ -8,6 +8,34 @@ TagManager:
   - Box
   - Undefined
   - Death
+  - b
+  - v
+  - n
+  - x
+  - c
+  - m
+  - z
+  - s
+  - h
+  - d
+  - g
+  - l
+  - k
+  - a
+  - f
+  - j
+  - e
+  - w
+  - t
+  - p
+  - y
+  - i
+  - q
+  - o
+  - u
+  - r
+  - Left
+  - Right
   layers:
   - Default
   - TransparentFX

@@ -152,17 +152,6 @@ Transform:
   - {fileID: 1960157388}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &188329319 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3650151351335910236, guid: de3908fa2ce993447b2d0d84b5d07d6a, type: 3}
-  m_PrefabInstance: {fileID: 466099781}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f280b5fd1e64fa4aa489216d8704d1d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.MiniGameResultsProcessor
 --- !u!1 &342781686
 GameObject:
   m_ObjectHideFlags: 0
@@ -415,7 +404,7 @@ PrefabInstance:
     - target: {fileID: -2152060390597426758, guid: de3908fa2ce993447b2d0d84b5d07d6a, type: 3}
       propertyPath: _resultsProcessor
       value: 
-      objectReference: {fileID: 188329319}
+      objectReference: {fileID: 466099782}
     - target: {fileID: 3434662569179043363, guid: de3908fa2ce993447b2d0d84b5d07d6a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.3032
@@ -473,6 +462,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de3908fa2ce993447b2d0d84b5d07d6a, type: 3}
+--- !u!114 &466099782 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1890872277345038066, guid: de3908fa2ce993447b2d0d84b5d07d6a, type: 3}
+  m_PrefabInstance: {fileID: 466099781}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f280b5fd1e64fa4aa489216d8704d1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.MiniGameResultsProcessor
 --- !u!1 &607279905
 GameObject:
   m_ObjectHideFlags: 0

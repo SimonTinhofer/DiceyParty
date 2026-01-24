@@ -10,7 +10,6 @@ namespace DiceyParty.MiniGame.TugTheRope
 {
     public class UIManager : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _scoreText;
         [SerializeField] private TMP_Text _pullButtonText;
         [SerializeField] private Button _pullButton;
 
@@ -60,18 +59,6 @@ namespace DiceyParty.MiniGame.TugTheRope
             {
                 if(OnTug == null) return;
                 OnTug.Invoke();
-            }
-        }
-
-        public void ShowScore(int score)
-        {
-            if (score < 0)
-                _scoreText.text = $"TeamLeft {Mathf.Abs(score)} more Tugs";
-            else if(score > 0)
-                _scoreText.text = $"TeamRight {score} more Tugs";
-            else
-            {
-                _scoreText.text = "Tied";
             }
         }
     }
