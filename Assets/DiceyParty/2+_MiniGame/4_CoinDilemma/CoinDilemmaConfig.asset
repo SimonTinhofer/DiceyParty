@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 443494fa0e6f40db8d4e8f0eaa08ac1c, type: 3}
   m_Name: CoinDilemmaConfig
   m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.CoinDilemma.CoinDilemmaConfigSO
-  RoundDecisionPhaseDuration: 10
+  TransparentPhaseDuration: 5
+  DecisionPhaseDuration: 5
   RoundResultPhaseDuration: 5
-  RoundCount: 3
+  RoundCount: 5
   NonOwnerScoreAlpha: 0.7

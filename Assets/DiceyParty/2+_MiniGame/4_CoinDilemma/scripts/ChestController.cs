@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FishNet;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,52 +13,58 @@ namespace DiceyParty.MiniGame.CoinDilemma
         [SerializeField] private TMP_Text _amountText;
         [SerializeField] private Transform _infoMarkerContainer;
         [SerializeField] private GameObject _infoMarkerPrefab;
-        [SerializeField] private GameObject _indicator;
-        [SerializeField] private Image _indicatorImage;
+        [SerializeField] private Transform _indicatorContainer;
+        [SerializeField] private GameObject _indicatorPrefab;
         [SerializeField] private GlobalConfigSO _globalConfig;
         [SerializeField] private GameObject _cross;
 
-        private Dictionary<int, GameObject> _infoMarkerArray = new();
-
-
-        public void Initialize(int amount, int clientCount, Color indicatorColor)
+        private Dictionary<int, GameObject> _indicator = new();
+        private Dictionary<int, GameObject> _infoMarker = new();
+        
+        public void Initialize(int amount)
         {
-            SetIndicatorColor(indicatorColor);
             SetAmount(amount);
-            SpawnMarkers(clientCount);
+            var clientIds = SessionDataSystem.Instance.GetClientIds();
+            SpawnIndicators(clientIds);
+            SpawnMarkers(clientIds);
         }
 
-        private void SetIndicatorColor(Color indicatorColor)
+        private void SpawnIndicators(IReadOnlyList<int> clientIds)
         {
-            _indicatorImage.color = indicatorColor;
+            foreach (int clientId in clientIds)
+            {
+                GameObject indicator = Instantiate(_indicatorPrefab, _indicatorContainer);
+                int colorIndex = SessionDataSystem.Instance.GetPlayerData()[clientId].ColorIndex;
+                indicator.GetComponent<Image>().color = _globalConfig.Colors[colorIndex];
+                indicator.SetActive(false);
+                _indicator.Add(clientId, indicator);
+            }
         }
 
         private void SetAmount(int amount)
         {
             _amountText.text = amount.ToString();
         }
-        private void SpawnMarkers(int clientCount)
+        private void SpawnMarkers(IReadOnlyList<int> clientIds)
         {
-            var clientIds = SessionDataSystem.Instance.GetClientIds();
-            _infoMarkerArray = new();
             foreach (int clientId in clientIds)
             {
                 GameObject infoMarker = Instantiate(_infoMarkerPrefab, _infoMarkerContainer);
                 int colorIndex = SessionDataSystem.Instance.GetPlayerData()[clientId].ColorIndex;
                 infoMarker.GetComponent<Image>().color = _globalConfig.Colors[colorIndex];
                 infoMarker.SetActive(false);
-                _infoMarkerArray.Add(clientId, infoMarker);
+                _infoMarker.Add(clientId, infoMarker);
             }
         }
 
+        public void ToggleIndicator(int clientID, bool toggle)
+        {
+            _indicator[clientID].SetActive(toggle);
+        }
+        
         public void ToggleInfoMarker(int clientID, bool toggle)
         {
-            _infoMarkerArray[clientID].SetActive(toggle);
-        }
-
-        public void ToggleChoiceIndicator(bool toggle)
-        {
-            _indicator.gameObject.SetActive(toggle);
+            _infoMarker[clientID].SetActive(toggle);
         }
 
         public void ToggleCross(bool toggle)

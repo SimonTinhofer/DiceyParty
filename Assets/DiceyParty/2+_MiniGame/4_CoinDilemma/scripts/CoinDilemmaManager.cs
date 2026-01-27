@@ -70,7 +70,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
             _chestAmounts = new int[chestAmout];
             for(int i = 0; i < _chestAmounts.Length; i++)
             {
-                _chestAmounts[i] = UnityEngine.Random.Range(1, 7) * 5;
+                _chestAmounts[i] = UnityEngine.Random.Range(1, 100);
             }
             return _chestAmounts;
         }
@@ -78,18 +78,14 @@ namespace DiceyParty.MiniGame.CoinDilemma
         [ObserversRpc (BufferLast = true)]
         private void StartRoundObserver(int[] chestContent)
         {
-            int colorIndex = SessionDataSystem.Instance.GetPlayerData()[_clientId].ColorIndex;
-            Color ownerColor = _globalConfig.Colors[colorIndex];
-            UIManager.Instance.GenerateChests(chestContent, ownerColor);
-            UIManager.Instance.StartTimer(_gameConfig.RoundDecisionPhaseDuration);
-            TryHandleDecisionPhase(_gameConfig.RoundDecisionPhaseDuration);
+            TryTransparentPhase(chestContent);
         }
 
-        private async void TryHandleDecisionPhase(float duration)
+        private async void TryTransparentPhase(int[] chestContent)
         {
             try
             {
-                await HandleDecisionPhase(duration);
+                await HandleTransparentPhase(chestContent);
             }
             catch (OperationCanceledException)
             {
@@ -101,12 +97,56 @@ namespace DiceyParty.MiniGame.CoinDilemma
             }
         }
 
-        private async Awaitable HandleDecisionPhase(float duration)
+        private async Awaitable HandleTransparentPhase(int[] chestContent)
         {
-            await Awaitable.WaitForSecondsAsync(duration, destroyCancellationToken);
-            int chestIndex = UIManager.Instance.GetChestIndex();
+            UIManager.Instance.GenerateChests(chestContent, LocalConnection.ClientId);
+            await Awaitable.WaitForSecondsAsync(_gameConfig.TransparentPhaseDuration, destroyCancellationToken);
+            TryDecisionPhase();
+        }
+        
+        public void SyncIndicator(int newChestIndex, int clientId)
+        {
+            SyncIndicatorServer(newChestIndex, clientId);
+        }
+
+        [ServerRpc (RequireOwnership = false)]
+        private void SyncIndicatorServer(int newChestIndex, int clientId)
+        {
+            SyncIndicatorObserver(newChestIndex, clientId);
+        }
+
+        [ObserversRpc(BufferLast = true)]
+        private void SyncIndicatorObserver(int newChestIndex, int clientId)
+        {
+            if(clientId == _clientId) return;
+            UIManager.Instance.SyncIndicator(newChestIndex, clientId);
+        }
+        
+        private async void TryDecisionPhase()
+        {
+            try
+            {
+                await HandleDecisionPhase();
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"{this.name}.HandleGamePhase failed: {e.Message}");
+            }
+        }
+        
+        private async Awaitable HandleDecisionPhase()
+        {
+            UIManager.Instance.HideOtherIndicators();
+            UIManager.Instance.StartTimer(_gameConfig.DecisionPhaseDuration);
+            await Awaitable.WaitForSecondsAsync(_gameConfig.DecisionPhaseDuration, destroyCancellationToken);
+            int chestIndex = UIManager.Instance.GetClientChestIndex();
             PassClientsChestIndex(_clientId, chestIndex);
         }
+
 
         [ServerRpc(RequireOwnership = false)]
         public void PassClientsChestIndex(int clientId, int chestIndex)

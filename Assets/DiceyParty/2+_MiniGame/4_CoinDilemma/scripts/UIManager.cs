@@ -22,10 +22,14 @@ namespace DiceyParty.MiniGame.CoinDilemma
 
         private ChestController[] _chests;
         private Button[] _chestButtons;
-        private int _selectedChestIndex = -1;
+        private Dictionary<int, int> _lastChestIndex = new();
         private float _timerDuration;
         private float _timerStartTimeStamp;
         private bool _timerIsRunning;
+
+        private int _localClientId;
+        private bool _transparentPhaseEnded;
+        private bool _decisionPhaseEnded;
 
 
         private void Awake()
@@ -36,8 +40,11 @@ namespace DiceyParty.MiniGame.CoinDilemma
                 Instance = this;
         }
 
-        public void GenerateChests(int[] chestAmounts, Color ownerColor)
+        public void GenerateChests(int[] chestAmounts, int clientId)
         {
+            _transparentPhaseEnded = false;
+            _decisionPhaseEnded = false;
+            _localClientId = clientId;
             if(_chests != null)
                 foreach (var chest in _chests)
                 {
@@ -52,21 +59,43 @@ namespace DiceyParty.MiniGame.CoinDilemma
                 _chests[i] = chest;
                 int index = i;
                 chest.ChestButton.onClick.AddListener(() => ChestClicked(index));
-                chest.Initialize(chestAmounts[i], SessionDataSystem.Instance.GetPlayerData().Count, ownerColor);
+                chest.Initialize(chestAmounts[i]);
             }
             int preselectedBox = Random.Range(0, chestAmounts.Length);
             ChestClicked(preselectedBox);
         }
 
-        private void ChestClicked(int index)
+        private void ChestClicked(int chestIndex)
         {
-            if (_selectedChestIndex > -1)
+            if(_decisionPhaseEnded) return;
+            if (_lastChestIndex.TryGetValue(_localClientId, out int lastIndex))
             {
-                int oldChest = _selectedChestIndex;
-                _chests[oldChest].ToggleChoiceIndicator(false);
+                _chests[lastIndex].ToggleIndicator(_localClientId, false);
             }
-            _selectedChestIndex = index;
-            _chests[_selectedChestIndex].ToggleChoiceIndicator(true);
+            _chests[chestIndex].ToggleIndicator(_localClientId, true);
+            _coinDilemmaManager.SyncIndicator(chestIndex, _localClientId);
+            _lastChestIndex[_localClientId] = chestIndex;
+        }
+
+        public void SyncIndicator(int chestIndex, int clientId)
+        {
+            if(_transparentPhaseEnded) return;
+            if (_lastChestIndex.TryGetValue(clientId, out int lastIndex))
+            {
+                _chests[lastIndex].ToggleIndicator(clientId, false);
+            }
+            _chests[chestIndex].ToggleIndicator(clientId, true);
+            _lastChestIndex[clientId] = chestIndex;
+        }
+        
+        public void HideOtherIndicators()
+        {
+            _transparentPhaseEnded = true;
+            foreach (var entry in _lastChestIndex)
+            {
+                if(entry.Key == _localClientId) continue;
+                _chests[entry.Value].ToggleIndicator(entry.Key, false);
+            }
         }
 
         public void StartTimer(float durationInSeconds)
@@ -89,7 +118,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
             if (timerTime <= 0)
             {
                 _timerIsRunning = false;
-                _timerText.text = "00:00";
+                _timerText.text = "";
                 return;
             }
             int timerSeconds = (int) MathF.Floor(timerTime);
@@ -111,9 +140,10 @@ namespace DiceyParty.MiniGame.CoinDilemma
             }
         }
 
-        public int GetChestIndex()
+        public int GetClientChestIndex()
         {
-            return _selectedChestIndex;
+            _decisionPhaseEnded = true;
+            return _lastChestIndex[_localClientId];
         }
     }
 }
