@@ -6,38 +6,23 @@ using UnityEngine.UI;
 
 namespace DiceyParty.MiniGame.RollOff
 {
-    public class PlayerScoreHandler : NetworkBehaviour
+    public class PlayerScoreHandler : MonoBehaviour
     {
         [SerializeField] private TMP_Text _longestRunText;
         [SerializeField] private Image _bgImage;
         [SerializeField] private GlobalConfigSO _globalConfig;
-        [SerializeField] private Transform _scoreTransform;
 
-        private void Start()
+        public void Setup(PlayerScoreInfo scoreInfo, int localClientId)
         {
-            _scoreTransform.SetParent(UIManager.Instance.GetScoreParent(), false);
-        }
-
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
-            int colorIndex = SessionDataSystem.Instance.GetPlayerData()[OwnerId].ColorIndex;
-            Color bgColor = _globalConfig.Colors[colorIndex];
-            if (!IsOwner)
+            Color bgColor = _globalConfig.Colors[scoreInfo.ColorIndex];
+            if (scoreInfo.ClientId != localClientId)
                 bgColor.a = 0.7f;
             _bgImage.color = bgColor;
         }
 
-        [ServerRpc]
-        public void SetLongestRun(int newAmount)
+        public void UpdateLongestRun(int longestRun)
         {
-            SetLongestRunObserver(newAmount);
-        }
-
-        [ObserversRpc]
-        private void SetLongestRunObserver(int newAmount)
-        {
-            _longestRunText.text = $"{newAmount}m";
+            _longestRunText.text = longestRun + "m";
         }
     }
 }

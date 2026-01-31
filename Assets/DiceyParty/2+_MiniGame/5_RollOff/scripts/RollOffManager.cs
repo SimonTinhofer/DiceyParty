@@ -52,6 +52,7 @@ namespace DiceyParty.MiniGame.RollOff
         
         private void StartGame()
         {
+            PlayerScoreManager.Instance.Setup();
             StartGameObserver();
         }
 

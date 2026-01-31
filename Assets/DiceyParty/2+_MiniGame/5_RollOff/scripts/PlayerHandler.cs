@@ -11,7 +11,6 @@ namespace DiceyParty.MiniGame.RollOff
         [SerializeField] private RollOffConfigSO _gameConfig;
         [SerializeField] private Rigidbody _rb;
         [SerializeField] private Transform _camTransform;
-        [SerializeField] private PlayerScoreHandler _scoreHandler;
         private Transform _spawnPoint;
         private InputAction _moveAction;
         private float _moveDirection = 0;
@@ -72,8 +71,8 @@ namespace DiceyParty.MiniGame.RollOff
             if(_accelerationStartTime < 0.05f)
                 _accelerationStartTime = Time.time;
             
-            if(_rb.position.z > _longestRun)
-                _scoreHandler.SetLongestRun(Mathf.FloorToInt(_rb.position.z));
+            if(_rb.position.z > _longestRun + 1)
+                PlayerScoreManager.Instance.UpdateLongestRunServer(LocalConnection.ClientId, Mathf.FloorToInt(_rb.position.z));
 
             float timeAccelerating = Time.time - _accelerationStartTime;
             _currentSpeed  = _gameConfig.SpeedFunctionMultiplyer * Mathf.Log(timeAccelerating + _gameConfig.AccelerationSecondsOffset, _gameConfig.MovementAccelerationLogBase);
@@ -85,7 +84,6 @@ namespace DiceyParty.MiniGame.RollOff
             if (_longestRun < Mathf.FloorToInt(_rb.position.z))
             {
                 _longestRun = Mathf.FloorToInt(_rb.position.z);
-                Debug.Log(_longestRun);
             }
 
             _rb.Sleep();
