@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using FishNet.Connection;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using UnityEngine;
@@ -10,15 +12,18 @@ namespace DiceyParty
     public class SessionDataSystem : NetworkBehaviour
     {
         public static Action OnLastPlayerRemoved;
+        public static Action<int> OnPlayerInfoRemoved;
         public static SessionDataSystem Instance;
-        [SerializeField] private GlobalConfigSO _globalConfig;
-
-        //Server-only-access
-        private Session _session;  
         
+        [SerializeField] private GlobalConfigSO _globalConfig;
+        
+        //Syced To Client
         private readonly SyncDictionary<int, PlayerInfo> _playerData = new();
         private readonly SyncList<int> _clientIds = new(); //List to track the order players joined / who gets host next
         
+        //Server-only-access
+        private Session _session;
+        private HashSet<string> _usedNames = new();
         private Stack<int> _availableColors;
         private int _hostId = -1;
 
@@ -55,7 +60,8 @@ namespace DiceyParty
 
             if (_playerData.TryGetValue(clientId, out var info)) return info;
                 
-            string playerName = $"Player{clientId}";
+            string initialName = $"Player";
+            string playerName = CheckPlayerName(initialName);
             int colorIndex = _availableColors.Pop();
             var player = new PlayerInfo(playerName, colorIndex, clientId);
             _playerData.Add(clientId, player);
@@ -69,38 +75,62 @@ namespace DiceyParty
             
             return player;
         }
-        
-        public PlayerInfo TryRemovePlayerInfo(int clientId)
+
+        private string CheckPlayerName(string initialName)
         {
-            CheckIfServer();
+            string playerName = initialName;
             
-            if (!_playerData.TryGetValue(clientId, out var player)) return null;
-            _availableColors.Push(player.ColorIndex);
-            _playerData.Remove(clientId);
-            
-            _clientIds.Remove(clientId);
-            if (_hostId != clientId) return null;
-            if (_clientIds.Count > 0)
+            while (_usedNames.Contains(playerName))
             {
-                _hostId = _clientIds.First();
-                var playerInfo = _playerData[_hostId];
-                playerInfo.SetIsHost(true);
-                return playerInfo;
+                if (Regex.IsMatch(playerName, @"_[0-9]$"))
+                {
+                    int counter = int.Parse(playerName[^1].ToString());
+                    playerName = playerName.Remove(playerName.Length - 1);
+                    playerName += (counter + 1).ToString();
+                }
+                else
+                {
+                    playerName += "_2";
+                }
             }
-            else
-            {
-                OnLastPlayerRemoved?.Invoke();
-                _hostId = -1;
-                return null;
-            }
+
+            _usedNames.Add(playerName);
+
+            return playerName; 
         }
         
-        public PlayerInfo UpdateName(string newName, int clientId)
+        public void TryRemovePlayerInfo(int clientId)
         {
             CheckIfServer();
-            _playerData[clientId].SetName(newName);
+            if (!_playerData.TryGetValue(clientId, out var player)) return;
+            
+            _availableColors.Push(player.ColorIndex);
+            _playerData.Remove(clientId);
+            _usedNames.Remove(player.Name);
+            _clientIds.Remove(clientId);
+            
+            if (_hostId != clientId) return;
+            if (_clientIds.Count == 0)
+            {
+                _hostId = -1;
+                OnLastPlayerRemoved?.Invoke();
+                return;
+            }
+            
+            _hostId = _clientIds.First();
+            var playerInfo = _playerData[_hostId];
+            playerInfo.SetIsHost(true);
+            OnPlayerInfoRemoved?.Invoke(_hostId);
+        }
+        
+        public void UpdateName(string newName, int clientId)
+        {
+            CheckIfServer();
+            PlayerInfo p = _playerData[clientId];
+            _usedNames.Remove(p.Name);
+            string adjustedNewName = CheckPlayerName(newName);
+            p.SetName(adjustedNewName);
             _playerData.Dirty(clientId);
-            return _playerData[clientId];
         }
         
         public IReadOnlyDictionary<int, PlayerInfo> GetPlayerData()

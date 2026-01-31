@@ -20,43 +20,40 @@ namespace DiceyParty.Lobby
         [ObserversRpc (RunLocally = true, BufferLast = true)]
         private void SetupPlayerCardsObservers(Dictionary<int, PlayerInfo> playerData)
         {
+            RemoveOldPlayerCards(playerData);
+
+            int localClientId = LocalConnection.ClientId;
             foreach (var pair in playerData)
             {
                 int clientId = pair.Key;
                 PlayerInfo p = pair.Value;
                 if (_handlers.TryGetValue(p.ClientId, out PlayerCardHandler oldHandler))
                 {
-                    oldHandler.Setup(p);
+                    oldHandler.Setup(p, localClientId);
                 }
                 else
                 {
                     var go = Instantiate(_prefab, _containerTransform);
                     var newHandler = go.gameObject.GetComponent<PlayerCardHandler>();
-                    newHandler.Setup(p);
+                    newHandler.Setup(p, localClientId);
                     _handlers.Add(p.ClientId, newHandler);  
                 }
             }
         }
-        
-        [Server]
-        public void RemovePlayerCardServer(int clientId)
+
+        private void RemoveOldPlayerCards(Dictionary<int, PlayerInfo> playerData)
         {
-            RemovePlayerCardObservers(clientId);
-        }
-        
-        [ObserversRpc (RunLocally = true, BufferLast = true)]
-        private void RemovePlayerCardObservers(int clientId)
-        {
-            if (_handlers.TryGetValue(clientId, out var handler))
+            var handlerCopy = new Dictionary<int, PlayerCardHandler>(_handlers);
+            foreach (var pair in handlerCopy)
             {
-                Destroy(handler.gameObject);
-                _handlers.Remove(clientId);
+                int clientId = pair.Key;
+                if (!playerData.ContainsKey(clientId))
+                {
+                    var handler = pair.Value;
+                    Destroy(handler.gameObject);
+                    _handlers.Remove(clientId);
+                }
             }
-            else
-            {
-                Debug.LogWarning("Key to Destroy was not present");
-            }
-            
         }
     }
 }

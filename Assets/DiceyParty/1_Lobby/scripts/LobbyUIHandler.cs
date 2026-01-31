@@ -1,4 +1,5 @@
 using System;
+using FishNet;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -107,7 +108,7 @@ namespace DiceyParty.Lobby
 
         private void LeaveButtonClicked()
         {
-            LobbyManager.LeaveSession();
+            InstanceFinder.ClientManager.StopConnection();
         }
 
         public void SetSessionName(string sessionName)

@@ -55,18 +55,13 @@ namespace DiceyParty
                 return;
             }
             
-            RemovePlayerInfo(conn.ClientId);
+            SessionDataSystem.Instance.TryRemovePlayerInfo(conn.ClientId);
             
             if(SessionStageSystem.GetCurrentStage() == SessionStage.MiniGame)
             {
                 ShowAlertObservers(conn.ClientId);
                 SessionStageSystem.ChangeState(SessionStage.Lobby);
             }
-        }
-
-        private void RemovePlayerInfo(int leavingClientId)
-        {
-            SessionDataSystem.Instance.TryRemovePlayerInfo(leavingClientId);
         }
 
         [ObserversRpc]

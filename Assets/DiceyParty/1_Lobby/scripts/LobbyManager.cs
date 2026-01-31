@@ -33,9 +33,15 @@ namespace DiceyParty.Lobby
             ObserverSetSessionName(session.Name);
 
             SceneManager.OnClientPresenceChangeEnd += OnClientPresenceChangeEnd;
+            SessionDataSystem.OnPlayerInfoRemoved += OnPlayerInfoRemoved;
         }
-
-        // ReSharper disable Unity.PerformanceAnalysis
+        
+        private void OnDestroy()
+        {
+            SceneManager.OnClientPresenceChangeEnd -= OnClientPresenceChangeEnd;
+            SessionDataSystem.OnPlayerInfoRemoved -= OnPlayerInfoRemoved;
+        }
+        
         private void OnClientPresenceChangeEnd(ClientPresenceChangeEventArgs args)
         {
             NetworkConnection conn = args.Connection;
@@ -48,6 +54,13 @@ namespace DiceyParty.Lobby
                 TargetEnablePlayButton(conn);
             }
         }
+        
+        private void OnPlayerInfoRemoved(int newHostId)
+        {
+            _playerCardManager.SetupPlayerCardsServer();
+            NetworkConnection hostConn = ServerManager.Clients[newHostId];
+            TargetEnablePlayButton(hostConn);
+        }
 
         [TargetRpc]
         private void TargetEnablePlayButton(NetworkConnection conn)
@@ -55,43 +68,10 @@ namespace DiceyParty.Lobby
             _lobbyUIHandler.EnablePlayButton();
         }
 
-        private void OnDestroy()
-        {
-            SceneManager.OnClientPresenceChangeEnd -= OnClientPresenceChangeEnd;
-        }
-
         [ObserversRpc (BufferLast = true)]
         private void ObserverSetSessionName(string sessionName)
         {
             _lobbyUIHandler.SetSessionName(sessionName);
-        }
-
-        public static void LeaveSession() => _instance.HandleLeaveSession();
-        
-        private void HandleLeaveSession()
-        {
-            ServerLeaveSession(ClientManager.Connection.ClientId, ClientManager.Connection);
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        private void ServerLeaveSession(int clientId, NetworkConnection conn)
-        {
-            Debug.Log("Removing Player Info");
-            var updatePlayerInfo = SessionDataSystem.Instance.TryRemovePlayerInfo(clientId);
-            _playerCardManager.RemovePlayerCardServer(clientId);
-            if (updatePlayerInfo != null) //means there is another Player that will get made the new host
-            {
-                _playerCardManager.SetupPlayerCardsServer();
-                var newHostConn = ServerManager.Clients[updatePlayerInfo.ClientId];
-                TargetEnablePlayButton(newHostConn);
-            }
-            TargetLeaveSession(conn);
-        }
-
-        [TargetRpc]
-        private void TargetLeaveSession(NetworkConnection conn)
-        {
-            ClientManager.StopConnection();
         }
 
         public static void UpdateName(string newName) => _instance.HandleUpdateName(newName);
@@ -104,7 +84,7 @@ namespace DiceyParty.Lobby
         [ServerRpc(RequireOwnership = false)]
         private void ServerUpdateName(string newName, int clientId)
         {
-            var updatePlayerInfo = SessionDataSystem.Instance.UpdateName(newName, clientId);
+            SessionDataSystem.Instance.UpdateName(newName, clientId);
             _playerCardManager.SetupPlayerCardsServer();
         }
 
