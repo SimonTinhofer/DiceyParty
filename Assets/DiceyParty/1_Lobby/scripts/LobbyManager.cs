@@ -11,9 +11,8 @@ namespace DiceyParty.Lobby
     {
         private static LobbyManager _instance;
         [SerializeField] private LobbyUIHandler _lobbyUIHandler;
-        [SerializeField] private GameObject _playerCardPrefab;
-
-        private Dictionary<int, PlayerCardHandler> _playerCardHandlers = new ();
+        [SerializeField] private GameObject _playerCardPrefab; 
+        [SerializeField] private PlayerCardManager _playerCardManager;
     
         private void Awake()
         {
@@ -24,11 +23,6 @@ namespace DiceyParty.Lobby
             }
             else
                 _instance = this;
-        }
-        
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
         }
 
         public override void OnStartServer()
@@ -47,12 +41,7 @@ namespace DiceyParty.Lobby
             NetworkConnection conn = args.Connection;
             int clientId = conn.ClientId;
             PlayerInfo playerInfo = SessionDataSystem.Instance.CreatePlayerInfo(clientId);
-            
-            NetworkObject nob = NetworkManager.GetPooledInstantiated(_playerCardPrefab, true);
-            NetworkManager.ServerManager.Spawn(nob, conn);
-            var handler = nob.gameObject.GetComponent<PlayerCardHandler>();
-            handler.SetupServer(playerInfo);
-            _playerCardHandlers.Add(args.Connection.ClientId, handler);
+            _playerCardManager.SetupPlayerCardsServer();
 
             if (playerInfo.IsHost)
             {
@@ -89,15 +78,12 @@ namespace DiceyParty.Lobby
         {
             Debug.Log("Removing Player Info");
             var updatePlayerInfo = SessionDataSystem.Instance.TryRemovePlayerInfo(clientId);
-            _playerCardHandlers.Remove(clientId);
+            _playerCardManager.RemovePlayerCardServer(clientId);
             if (updatePlayerInfo != null) //means there is another Player that will get made the new host
             {
-                var handler = _playerCardHandlers[updatePlayerInfo.ClientId];
-                handler.SetupServer(updatePlayerInfo);
-
-                
-                var newHostconn = ServerManager.Clients[updatePlayerInfo.ClientId];
-                TargetEnablePlayButton(newHostconn);
+                _playerCardManager.SetupPlayerCardsServer();
+                var newHostConn = ServerManager.Clients[updatePlayerInfo.ClientId];
+                TargetEnablePlayButton(newHostConn);
             }
             TargetLeaveSession(conn);
         }
@@ -119,8 +105,7 @@ namespace DiceyParty.Lobby
         private void ServerUpdateName(string newName, int clientId)
         {
             var updatePlayerInfo = SessionDataSystem.Instance.UpdateName(newName, clientId);
-            var handler = _playerCardHandlers[clientId];
-            handler.SetupServer(updatePlayerInfo);
+            _playerCardManager.SetupPlayerCardsServer();
         }
 
         public static void PlayMiniGame(int sceneIndex) => _instance.ServerPlayMiniGame(sceneIndex);

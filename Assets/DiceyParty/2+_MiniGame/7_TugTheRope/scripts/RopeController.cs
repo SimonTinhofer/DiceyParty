@@ -1,61 +1,49 @@
 ﻿using System;
+using FishNet.Managing;
 using FishNet.Object;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace DiceyParty.MiniGame.TugTheRope
 {
-    public class RopeController : MonoBehaviour
+    public class RopeController : NetworkBehaviour
     {
-        [SerializeField] private Rigidbody _rb;
         [SerializeField] private TugTheRopeConfig _gameConfig;
-        private bool _readyForTug;
-        private Vector3 _netAppliedForce;
-        private InputAction _moveAction;
-
-        public void Setup(int playerCount)
-        {
-            int maxTeamsize = Mathf.FloorToInt((float)(playerCount +1)/2);
-            _rb.mass = _gameConfig.BaseMass + maxTeamsize * _gameConfig.MassPerPlayer;
-        }
+        private float _target;
+        private float _stepSize;
+        [SerializeField] float _goal = 5f;
+        private bool _teamWon;
         
-        public async void ApplyForce(Vector3 move, float balancingMultiplyer)
+        private void Start()
         {
-            try
-            {
-                await HandleApplyForce(move, balancingMultiplyer);
-            }
-            catch (OperationCanceledException)
-            {
-                Debug.Log($"Due to GO being destroyed during async operation it was canceled");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"OnStartGamePhase loop failed: {e.Message}");
-            }
+            _stepSize = _gameConfig.BaseStepSize;
+            _target = transform.position.x;
         }
 
-        private async Awaitable HandleApplyForce(Vector3 move, float balancingMultiplyer)
+        public void AddTug(Team team, int teamSize)
         {
-            _netAppliedForce += move.normalized * _gameConfig.TugForceIncrease * balancingMultiplyer;
-            await Awaitable.WaitForSecondsAsync(_gameConfig.TimeApplyTugForceIncrease, destroyCancellationToken);
-            _netAppliedForce -= move.normalized * _gameConfig.TugForceIncrease * balancingMultiplyer;
+            int direction = team == Team.RightTeam ? 1 : -1;
+            _target += direction * (_stepSize / teamSize);
+            _stepSize += _gameConfig.StepSizeGrowth;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
-            if(_netAppliedForce.magnitude < 1f) return;
-            _rb.AddForce(_netAppliedForce);
-        }
+            if(!IsServerStarted) return;
+            if(_teamWon) return;
+            if (Mathf.Abs(transform.position.x) > _goal)
+            {
+                Team winnerTeam = transform.position.x < 0 ? Team.LeftTeam : Team.RightTeam;
+                TugTheRopeManager.Instance.TeamWon(winnerTeam);
+                _teamWon = true;
 
-        private void OnTriggerEnter(Collider other)
-        {
-            if (other.CompareTag("Left"))
-                TugTheRopeManager.Instance.TeamWon(Team.LeftTeam);
-            else if (other.CompareTag("Right"))
-                TugTheRopeManager.Instance.TeamWon(Team.RightTeam);
-            _rb.Sleep();
-            gameObject.GetComponent<Collider>().enabled = false;
+            }
+            if (Mathf.Abs(_target - transform.position.x) < 0.05f)
+            {
+                _target = transform.position.x;
+            }
+            float k = 1f - Mathf.Exp(-_gameConfig.Sharpness * Time.deltaTime);
+            transform.position = new(Mathf.Lerp(transform.position.x, _target, k), transform.position.y, transform.position.z);
         }
     }
 }

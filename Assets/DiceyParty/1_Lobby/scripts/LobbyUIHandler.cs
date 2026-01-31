@@ -13,7 +13,6 @@ namespace DiceyParty.Lobby
         [SerializeField] private Button _leaveButton;
         [SerializeField] private Button _editNameButton;
         [SerializeField] private Button _playButton;
-        [SerializeField] private Transform _playerCardParent;
         
         [SerializeField] private GameObject _editNameContainer;
         [SerializeField] private TMP_InputField _nameInput;
@@ -32,11 +31,6 @@ namespace DiceyParty.Lobby
                 Destroy(gameObject);
             else
                 _instance = this;
-        }
-
-        public static Transform GetPlayerCardParent()
-        {
-            return _instance._playerCardParent;
         }
 
         private void Start()
