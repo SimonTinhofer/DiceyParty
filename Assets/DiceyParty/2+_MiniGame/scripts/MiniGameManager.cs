@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using FishNet.Object;
 using UnityEngine;
 
@@ -12,11 +13,12 @@ namespace DiceyParty.MiniGame
         private static MiniGameManager _instance;
         private int _playerCount;
         private readonly HashSet<int> _readyPlayers = new();
-        private MiniGamePhase _currentPhase = MiniGamePhase.TutorialPhase;
+        private MiniGamePhase _currentPhase = MiniGamePhase.Tutorial;
 
         [SerializeField] MiniGameResultsProcessor _resultsProcessor;
-        [SerializeField] private MiniGameWrapper _miniGameWrapper;
+        [SerializeField] private GlobalConfigSO _globalConfig;
         private int _clientId;
+        private bool _isReadyForGame;
 
         public static void FinishedGamePhase(Dictionary<int, int> placements) =>
             _instance.HandleFinishedGamePhase(placements);
@@ -38,22 +40,23 @@ namespace DiceyParty.MiniGame
         public override void OnStartServer()
         {
             _playerCount = SessionDataSystem.Instance.GetPlayerData().Count;
-            _miniGameWrapper.DisableTutorialPanel();
+            MiniGameWrapperUI.Instance.ToggleTutorialPanel(false);
         }
 
         public override void OnStartClient()
         {
             _clientId = ClientManager.Connection.ClientId;
             base.OnStartClient();
-            StartTutorialPhase();
+            TryTutorialPhase();
         }
 
-        private async void StartTutorialPhase()
+        #region TutorialPhase
+        
+        private async void TryTutorialPhase()
         {
             try
             {
-                await _miniGameWrapper.TutorialPhase(destroyCancellationToken);
-                ClientFinishedTutorialPhase(_clientId);
+                await TutorialPhase();
             }
             catch (OperationCanceledException)
             {
@@ -65,25 +68,33 @@ namespace DiceyParty.MiniGame
             }
         }
 
-        #region TutorialPhase
+        private async Awaitable TutorialPhase()
+        {
+            MiniGameWrapperUI.Instance.ReadyButton.onClick.AddListener(ReadyForGame);
+            await Awaitable.WaitForSecondsAsync(_globalConfig.TutorialDuration, destroyCancellationToken);
+            ReadyForGame();
+        }
+
+        private void ReadyForGame()
+        {
+            if(_isReadyForGame) return;
+            _isReadyForGame = true;
+            MiniGameWrapperUI.Instance.ReadyButton.interactable = false;
+            ReadyForGameServer(_clientId);
+        }
 
         [ServerRpc (RequireOwnership = false)]
-        private void ClientFinishedTutorialPhase(int clientId)
+        private void ReadyForGameServer(int clientId)
         {
-            if (_currentPhase != MiniGamePhase.TutorialPhase)
-            {
-                Debug.LogWarning($"FinishedTutorialPhase was called in {_currentPhase}!");
-                return;
-            }
+            if (_currentPhase != MiniGamePhase.Tutorial){ return;}
             
             _readyPlayers.Add(clientId);
             if (_readyPlayers.Count < _playerCount) return;
             if (_readyPlayers.Count > _playerCount){
-                Debug.LogWarning($"FinishedTutorialPhase was called too often!");
+                Debug.LogWarning($"ClientReadyForGamePhase was called too often!");
                 return;
             }
             
-            _currentPhase = MiniGamePhase.GamePhase;
             OnStartGamePhase?.Invoke();
             StartGamePhaseObservers();
             _readyPlayers.Clear();
@@ -96,6 +107,8 @@ namespace DiceyParty.MiniGame
         [ObserversRpc]
         private void StartGamePhaseObservers()
         {
+            _currentPhase = MiniGamePhase.Game;
+            MiniGameWrapperUI.Instance.ToggleTutorialPanel(false);
             OnStartGamePhase?.Invoke();
         }
         
@@ -108,7 +121,7 @@ namespace DiceyParty.MiniGame
         private void ProcessResults(Dictionary<int, int> placements)
         {
             Dictionary<int, ResultCardInfo> resultCardData = _resultsProcessor.ProcessResults(placements);
-            _currentPhase = MiniGamePhase.ResultPhase;
+            _currentPhase = MiniGamePhase.Result;
             StartResultPhaseObservers(resultCardData);
         }
 
@@ -119,14 +132,13 @@ namespace DiceyParty.MiniGame
         [ObserversRpc]
         private void StartResultPhaseObservers(Dictionary<int, ResultCardInfo> resultCardData)
         {
-            PlayOutResultPhase(resultCardData);
+            TryPlayOutResultPhase(resultCardData);
         }
-        private async void PlayOutResultPhase(Dictionary<int, ResultCardInfo> resultCardData)
+        private async void TryPlayOutResultPhase(Dictionary<int, ResultCardInfo> resultCardData)
         {
             try
             {
-                await _miniGameWrapper.ResultsPhase(resultCardData, destroyCancellationToken);
-                ClientFinishedResultPhase(_clientId);
+                await PlayOutResultPhase(resultCardData);
             }
             catch (OperationCanceledException)
             {
@@ -137,11 +149,18 @@ namespace DiceyParty.MiniGame
                 Debug.LogError($"OnStartGamePhase loop failed: {e.Message}");
             }
         }
-        
+
+        private async Awaitable PlayOutResultPhase (Dictionary<int, ResultCardInfo> resultCardData)
+        {
+            MiniGameWrapperUI.Instance.ShowResultsPanel(resultCardData);
+            await Awaitable.WaitForSecondsAsync(_globalConfig.ResultsDuration, destroyCancellationToken);
+            ClientFinishedResultPhase(_clientId);
+        }
+
         [ServerRpc (RequireOwnership = false)]
         private void ClientFinishedResultPhase(int clientId)
         {
-            if (_currentPhase != MiniGamePhase.ResultPhase)
+            if (_currentPhase != MiniGamePhase.Result)
             {
                 Debug.LogWarning($"FinishedResultPhase was called in {_currentPhase}!");
                 return;
@@ -165,9 +184,9 @@ namespace DiceyParty.MiniGame
 
         private enum MiniGamePhase
         {
-            TutorialPhase,
-            GamePhase,
-            ResultPhase
+            Tutorial,
+            Game,
+            Result
         }
     }
 }
