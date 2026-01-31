@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 443494fa0e6f40db8d4e8f0eaa08ac1c, type: 3}
   m_Name: CoinDilemmaConfig
   m_EditorClassIdentifier: DiceyParty.MiniGame::DiceyParty.MiniGame.CoinDilemma.CoinDilemmaConfigSO
-  TransparentPhaseDuration: 5
+  TransparentPhaseDuration: 10
   DecisionPhaseDuration: 5
   RoundResultPhaseDuration: 5
   RoundCount: 5

@@ -7,25 +7,18 @@ using UnityEngine.UI;
 
 namespace DiceyParty.MiniGame.CoinDilemma
 {
-    public class PlayerScore : NetworkBehaviour
+    public class PlayerScoreHandler : MonoBehaviour
     {
         [SerializeField] private TMP_Text _coinText;
         [SerializeField] private Image _bgImage;
         [SerializeField] private Image _coinImage;
         [SerializeField] private GlobalConfigSO _globalConfig;
         [SerializeField] private CoinDilemmaConfigSO _gameConfig;
-        
-        private void Start()
-        {
-            transform.SetParent(UIManager.Instance.PlayerScoreParent, false);
-        }
 
-        public override void OnStartClient()
+        public void Setup(PlayerScoreInfo scoreInfo, int localClientId)
         {
-            base.OnStartClient();
-            int colorIndex = SessionDataSystem.Instance.GetPlayerData()[OwnerId].ColorIndex;
-            Color bgColor = _globalConfig.Colors[colorIndex];
-            if (!IsOwner)
+            Color bgColor = _globalConfig.Colors[scoreInfo.ColorIndex];
+            if(scoreInfo.ClientId != localClientId)
             {
                 bgColor.a = _gameConfig.NonOwnerScoreAlpha;
                 Color coinColor = _coinImage.color;
@@ -33,17 +26,12 @@ namespace DiceyParty.MiniGame.CoinDilemma
                 _coinImage.color = coinColor;
             }
             _bgImage.color = bgColor;
+            _coinText.text = scoreInfo.CoinAmount.ToString();
         }
 
-        public void SetCoinAmount(int newAmount)
+        public void UpdateCoinAmount(int coinAmount)
         {
-            SetCoinAmountObserver(newAmount);
-        }
-
-        [ObserversRpc]
-        private void SetCoinAmountObserver(int newAmount)
-        {
-            _coinText.text = newAmount.ToString();
+            _coinText.text = coinAmount.ToString();
         }
     }
 }

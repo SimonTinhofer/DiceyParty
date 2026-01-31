@@ -13,9 +13,8 @@ namespace DiceyParty.MiniGame.CoinDilemma
     {
         [SerializeField] private GlobalConfigSO _globalConfig;
         [SerializeField] private CoinDilemmaConfigSO _gameConfig;
-        [SerializeField] private GameObject _playerScorePrefab;
-
-        private Dictionary<int, PlayerScore> _playerScores = new();
+        [SerializeField] private PlayerScoreManager _playerScoreManager;
+        
         private Dictionary<int, int> _playerChoices = new();
         private Dictionary<int, int> _playerCoinAmounts = new();
         private int[] _chestAmounts;
@@ -26,8 +25,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
         public override void OnStartServer()
         {
             base.OnStartServer();
-            SceneManager.OnClientPresenceChangeEnd += SpawnPlayerScore;
-            MiniGameManager.OnStartGamePhase += StartRound;
+            MiniGameManager.OnStartGamePhase += StartGamePhase;
             foreach (var clientId in SessionDataSystem.Instance.GetClientIds())
             {
                 _playerCoinAmounts.Add(clientId, 0);
@@ -42,20 +40,15 @@ namespace DiceyParty.MiniGame.CoinDilemma
 
         private void OnDestroy()
         {
-            SceneManager.OnClientPresenceChangeEnd -= SpawnPlayerScore;
-            MiniGameManager.OnStartGamePhase -= StartRound;
+            MiniGameManager.OnStartGamePhase -= StartGamePhase;
         }
 
-        private void SpawnPlayerScore(ClientPresenceChangeEventArgs args)
+        private void StartGamePhase()
         {
-            if (!SessionDataSystem.Instance.GetClientIds().Contains(args.Connection.ClientId))
-                return;
-            NetworkConnection conn = args.Connection;
-            NetworkObject nob = NetworkManager.GetPooledInstantiated(_playerScorePrefab,  true);
-            NetworkManager.ServerManager.Spawn(nob, conn);
-            _playerScores.Add(conn.ClientId, nob.GetComponent<PlayerScore>());
+            _playerScoreManager.Setup();
+            StartRound();
         }
-
+        
         private void StartRound()
         {
             _currentRound++;
@@ -100,6 +93,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
         private async Awaitable HandleTransparentPhase(int[] chestContent)
         {
             UIManager.Instance.GenerateChests(chestContent, LocalConnection.ClientId);
+            UIManager.Instance.StartTimer(_gameConfig.TransparentPhaseDuration + _gameConfig.DecisionPhaseDuration);
             await Awaitable.WaitForSecondsAsync(_gameConfig.TransparentPhaseDuration, destroyCancellationToken);
             TryDecisionPhase();
         }
@@ -141,7 +135,6 @@ namespace DiceyParty.MiniGame.CoinDilemma
         private async Awaitable HandleDecisionPhase()
         {
             UIManager.Instance.HideOtherIndicators();
-            UIManager.Instance.StartTimer(_gameConfig.DecisionPhaseDuration);
             await Awaitable.WaitForSecondsAsync(_gameConfig.DecisionPhaseDuration, destroyCancellationToken);
             int chestIndex = UIManager.Instance.GetClientChestIndex();
             PassClientsChestIndex(_clientId, chestIndex);
@@ -182,10 +175,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
                     chestsToCrossOut.Add(i);
                 }
             }
-            foreach (var pair in _playerCoinAmounts)
-            {
-                _playerScores[pair.Key].SetCoinAmount(pair.Value);
-            }
+            _playerScoreManager.UpdateCoinAmounts(_playerCoinAmounts);
             TryFinishRound(chestsToCrossOut);
         }
 
@@ -222,7 +212,6 @@ namespace DiceyParty.MiniGame.CoinDilemma
         {
             var orderedCoinAmounts = _playerCoinAmounts.OrderByDescending(pair => pair.Value);
             Dictionary<int, int> placements = orderedCoinAmounts.Select(pair => new { pair.Key, Rank = orderedCoinAmounts.Count(p => p.Value > pair.Value) }).ToDictionary(pair => pair.Key, pair => pair.Rank);
-            SceneManager.OnClientPresenceChangeEnd -= SpawnPlayerScore;
             MiniGameManager.FinishedGamePhase(placements);
         }
 

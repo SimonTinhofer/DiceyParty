@@ -18,7 +18,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
         [SerializeField] private CoinDilemmaManager _coinDilemmaManager;
         [SerializeField] private GameObject _chestPrefab;
         [SerializeField] private Transform _chestContainerTransform;
-        [SerializeField] private TMP_Text _timerText;
+        [SerializeField] private TMP_Text _timer;
 
         private ChestController[] _chests;
         private Button[] _chestButtons;
@@ -30,6 +30,7 @@ namespace DiceyParty.MiniGame.CoinDilemma
         private int _localClientId;
         private bool _transparentPhaseEnded;
         private bool _decisionPhaseEnded;
+        private int _prevSecondsLeft;
 
 
         private void Awake()
@@ -113,19 +114,21 @@ namespace DiceyParty.MiniGame.CoinDilemma
 
         private void UpdateTimer()
         {
-            float elapsedTime = Time.time - _timerStartTimeStamp;
-            float timerTime = _timerDuration - elapsedTime;
-            if (timerTime <= 0)
+            float timePassed = Time.time - _timerStartTimeStamp;
+            float timeLeft = _timerDuration - timePassed;
+            int secondsInTenths = Mathf.CeilToInt(timeLeft*10);
+            
+            if (_prevSecondsLeft == secondsInTenths) return;
+            if (secondsInTenths <= 0)
             {
                 _timerIsRunning = false;
-                _timerText.text = "";
+                _timer.text = $"";
                 return;
             }
-            int timerSeconds = (int) MathF.Floor(timerTime);
-            int timerCentiSeconds = (int) MathF.Floor((timerTime - timerSeconds)*100);
-            string preSecondsZero = (timerSeconds < 10) ? "0" : "";
-            string preCentiSecondsZero = (timerCentiSeconds < 10) ? "0" : "";
-            _timerText.text  = $"{preSecondsZero}{timerSeconds}:{preCentiSecondsZero}{timerCentiSeconds}";
+
+            string timeleft = secondsInTenths.ToString();
+            _timer.text = $"{timeleft[..^1]}.{timeleft[^1]}s";
+            _prevSecondsLeft = secondsInTenths;
         }
 
         public void ShowChoices(Dictionary<int, int> playerChoices, List<int> chestsToCrossOut)

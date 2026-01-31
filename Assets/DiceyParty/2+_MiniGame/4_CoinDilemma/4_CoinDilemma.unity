@@ -151,6 +151,7 @@ Transform:
   m_Children:
   - {fileID: 7701357645558512064}
   - {fileID: 1469281863}
+  - {fileID: 370697988}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &208692287
@@ -285,6 +286,55 @@ Transform:
   m_Children: []
   m_Father: {fileID: 607279906}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &370697987
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 370697988}
+  - component: {fileID: 370697989}
+  m_Layer: 0
+  m_Name: PlayerScoreManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &370697988
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370697987}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 208692286}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &370697989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 370697987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70219f5bdbf74523af2a59655de0c634, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty.MiniGame.CoinDilemma::DiceyParty.MiniGame.CoinDilemma.PlayerScoreManager
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 208692287}
+  _networkObjectCache: {fileID: 0}
+  _prefab: {fileID: 1595784523852520499, guid: 0e990448b1288ae4eae88dce41066565, type: 3}
+  _containerTransform: {fileID: 816915815}
 --- !u!1 &386036834
 GameObject:
   m_ObjectHideFlags: 0
@@ -920,7 +970,7 @@ MonoBehaviour:
   _networkObjectCache: {fileID: 0}
   _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}
   _gameConfig: {fileID: 11400000, guid: df0fff550acf53b4897b0147f6e9d116, type: 2}
-  _playerScorePrefab: {fileID: 1595784523852520499, guid: 0e990448b1288ae4eae88dce41066565, type: 3}
+  _playerScoreManager: {fileID: 370697989}
 --- !u!1 &1573448850
 GameObject:
   m_ObjectHideFlags: 0
@@ -954,7 +1004,7 @@ MonoBehaviour:
   _coinDilemmaManager: {fileID: 1469281865}
   _chestPrefab: {fileID: 7912515870263363902, guid: 21001abb537775648999f9dfa87d8715, type: 3}
   _chestContainerTransform: {fileID: 982392342}
-  _timerText: {fileID: 1613122759}
+  _timer: {fileID: 1613122759}
 --- !u!4 &1573448852
 Transform:
   m_ObjectHideFlags: 0
