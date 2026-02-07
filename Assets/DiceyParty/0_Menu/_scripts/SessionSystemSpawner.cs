@@ -42,7 +42,10 @@ namespace DiceyParty.Menu
         private void StartSession(Session session)
         {
             SessionDataSystem.Instance.SetSession(session);
-            SessionAnalyticsSystem.Instance.Setup(session.DeploymentId);
+            if (session.Name != "00")
+            {
+                SessionAnalyticsSystem.Instance.Setup(session.DeploymentId);
+            }
             SessionAnalyticsSystem.Instance.SessionStarted();
             SessionStageSystem.ChangeState(SessionStage.Lobby);
         }
@@ -57,7 +60,6 @@ namespace DiceyParty.Menu
                 DeploymentId = "testDeployment"
             };
             SessionDataSystem.Instance.SetSession(session);
-            SessionAnalyticsSystem.Instance.Setup(session.DeploymentId);
             SessionAnalyticsSystem.Instance.SessionStarted();
             SessionStageSystem.ChangeState(SessionStage.Lobby);
 

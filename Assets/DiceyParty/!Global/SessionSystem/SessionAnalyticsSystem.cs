@@ -9,6 +9,7 @@ namespace DiceyParty
     {
         public static SessionAnalyticsSystem Instance;
         private string _deploymentId;
+        private bool _analyticsToggle;
         private Dictionary<int, string> _sceneIdMiniGames = new()
         {
             {2, "PaintTheBall"},
@@ -33,11 +34,13 @@ namespace DiceyParty
 
         public void Setup(string deploymentId)
         {
+            _analyticsToggle = true;
             _deploymentId = deploymentId;
         }
 
         public void SessionStarted()
         {
+            if(!_analyticsToggle) return;
             PostHog.Capture(
                 eventName: "session_started",
                 distinctId: _deploymentId
@@ -46,6 +49,7 @@ namespace DiceyParty
 
         public void SessionStopped()
         {
+            if(!_analyticsToggle) return;
             PostHog.Capture(
                 eventName: "session_stopped",
                 distinctId: _deploymentId
@@ -54,6 +58,7 @@ namespace DiceyParty
 
         public void JoinAttempt()
         {
+            if(!_analyticsToggle) return;
             PostHog.Capture(
                 eventName: "join_attempt",
                 distinctId: _deploymentId
@@ -62,6 +67,7 @@ namespace DiceyParty
 
         public void PlayerJoined()
         {
+            if(!_analyticsToggle) return;
             PostHog.Capture(
                 eventName: "player_joined",
                 distinctId: _deploymentId
@@ -70,6 +76,7 @@ namespace DiceyParty
 
         public void PlayerLeft()
         {
+            if(!_analyticsToggle) return;
             PostHog.Capture(
                 eventName: "player_left",
                 distinctId: _deploymentId
@@ -79,6 +86,7 @@ namespace DiceyParty
 
         public void MiniGameStarted()
         {
+            if(!_analyticsToggle) return;
             PostHog.Capture(
                 eventName: "minigame_started",
                 distinctId: _deploymentId
@@ -87,6 +95,7 @@ namespace DiceyParty
 
         public void MiniGameStopped(int sceneId)
         {
+            if(!_analyticsToggle) return;
             PostHog.Capture(
                 eventName: "minigame_stopped",
                 distinctId: _deploymentId,
