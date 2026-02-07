@@ -113,7 +113,7 @@ namespace DiceyParty.Lobby
 
         public void SetSessionName(string sessionName)
         {
-            _sessionName.text = "Id: " + sessionName;
+            _sessionName.text = sessionName;
         }
     }
 }

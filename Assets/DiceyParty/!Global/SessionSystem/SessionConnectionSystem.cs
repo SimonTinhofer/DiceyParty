@@ -41,10 +41,14 @@ namespace DiceyParty
 
         private void OnClientConnects(NetworkConnection conn)
         {
-            if (AllowConnecting()) return;
-            
-            _dcConn = conn;
-            conn.Disconnect(true);
+            SessionAnalyticsSystem.Instance.JoinAttempt();
+            if (!AllowConnecting())
+            {
+                _dcConn = conn;
+                conn.Disconnect(true);
+                return;
+            }
+            SessionAnalyticsSystem.Instance.PlayerJoined();
         }
 
         private void OnClientDisconnects(NetworkConnection conn)
@@ -56,6 +60,7 @@ namespace DiceyParty
             }
             
             SessionDataSystem.Instance.TryRemovePlayerInfo(conn.ClientId);
+            SessionAnalyticsSystem.Instance.PlayerLeft();
             
             if(SessionStageSystem.GetCurrentStage() == SessionStage.MiniGame)
             {
@@ -81,8 +86,8 @@ namespace DiceyParty
         private bool AllowConnecting()
         {
             bool sessionFull = ServerManager.Clients.Count > _globalConfig.MaxPlayerCount;
-            bool isLobbyStage = SessionStageSystem.GetCurrentStage() == SessionStage.Lobby;
-            if (!sessionFull && isLobbyStage)
+            bool inMiniGame = SessionStageSystem.GetCurrentStage() == SessionStage.MiniGame;
+            if (!sessionFull && !inMiniGame)
                 return true;
             return false;
         }
@@ -90,7 +95,8 @@ namespace DiceyParty
         private void OnLastClientDisconnected()
         {
             Session session = SessionDataSystem.Instance.GetSession();
-            if(session.DeploymentId != "test")
+            SessionAnalyticsSystem.Instance.SessionStopped();
+            if(session.DeploymentId != "testSession")
                 TryDeleteSession(session);
             else
             {

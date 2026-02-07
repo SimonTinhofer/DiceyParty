@@ -16,8 +16,12 @@ namespace DiceyParty
         private void Awake()
         {
             Instance = this;
-            OnNewAlertManagerLoaded?.Invoke();
             _confirmButton.onClick.AddListener(() => ToggleAlert(false));
+        }
+
+        private void Start()
+        {
+            OnNewAlertManagerLoaded?.Invoke();
         }
 
         private void ToggleAlert(bool toggle)

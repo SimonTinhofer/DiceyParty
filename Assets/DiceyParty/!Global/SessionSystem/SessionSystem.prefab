@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5328248440691610148}
   - component: {fileID: 2657100333323025607}
   - component: {fileID: 3284685145876465476}
+  - component: {fileID: 8428840154645629181}
   m_Layer: 0
   m_Name: SessionSystem
   m_TagString: Untagged
@@ -82,7 +83,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _preventDespawnOnDisconnect: 0
   _defaultDespawnType: 0
-  _initializedTimestamp: -8584320983582676283
+  _initializedTimestamp: -8584316482602611433
   NetworkObserver: {fileID: 0}
   _enablePrediction: 0
   _predictionType: 0
@@ -97,9 +98,9 @@ MonoBehaviour:
   _spectatorInterpolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
-  <PrefabId>k__BackingField: 21
+  <PrefabId>k__BackingField: 18
   <SpawnableCollectionId>k__BackingField: 0
-  <AssetPathHash>k__BackingField: 17546934313120019461
+  <AssetPathHash>k__BackingField: 14870879633827863876
   SceneId: 0
   SerializedTransformProperties:
     Position: {x: 817.75854, y: 0, z: 5851.701}
@@ -138,3 +139,18 @@ MonoBehaviour:
   _addedNetworkObject: {fileID: 5328248440691610148}
   _networkObjectCache: {fileID: 5328248440691610148}
   _globalConfig: {fileID: 11400000, guid: a87a05992de6d974bb2257f3b55635e6, type: 2}
+--- !u!114 &8428840154645629181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3033259187467686524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba9f45198ee24239946e0129daa54a80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: DiceyParty::DiceyParty.SessionAnalyticsSystem
+  _componentIndexCache: 255
+  _addedNetworkObject: {fileID: 5328248440691610148}
+  _networkObjectCache: {fileID: 0}

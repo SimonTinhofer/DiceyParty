@@ -11,7 +11,8 @@ namespace DiceyParty
     {
         private static SessionStageSystem _instance;
         private int _nextMiniGameSceneId;
-        private SessionStage _currentStage = SessionStage.Lobby;
+        private SessionStage _lastStage = SessionStage.Menu;
+        private int _lastSceneIndex;
 
         private void Awake()
         {
@@ -30,23 +31,25 @@ namespace DiceyParty
         private void HandleChangeState(SessionStage stage)
         {
             CheckIfServer();
-            _currentStage = stage;
-
             switch (stage)
             {
                 case SessionStage.Lobby:
+                    if(_lastStage == SessionStage.MiniGame)
+                        SessionAnalyticsSystem.Instance.MiniGameStopped(_lastSceneIndex);
                     LoadSceneByIndex(1);
                     break;
 
                 case SessionStage.MiniGame:
+                    SessionAnalyticsSystem.Instance.MiniGameStarted();
                     LoadSceneByIndex(_nextMiniGameSceneId);
                     break;
             }
+            _lastStage = stage;
         }
-        
+
         public static SessionStage GetCurrentStage()
         {
-            return _instance._currentStage;
+            return _instance._lastStage;
         }
 
         private void LoadSceneByIndex (int sceneIndex)
@@ -57,6 +60,7 @@ namespace DiceyParty
                 ReplaceScenes = ReplaceOption.All
             };
             NetworkManager.SceneManager.LoadGlobalScenes(sld);
+            _lastSceneIndex = sceneIndex;
         }
 
         private void CheckIfServer()
@@ -67,8 +71,9 @@ namespace DiceyParty
     }
     public enum SessionStage
     {
+        Menu,
         Lobby,
-        MiniGame,
+        MiniGame
     }
 }
 

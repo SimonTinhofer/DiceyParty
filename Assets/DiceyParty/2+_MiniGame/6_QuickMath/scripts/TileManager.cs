@@ -20,11 +20,6 @@ namespace DiceyParty.MiniGame.QuickMath
         private bool _negativeNums;
         private CalculationData _currentCalculationData;
         
-        //Setup => Restore Tiles set Text to
-        //GenerateRoundData => Show Calculation
-        //Show Results
-        //Remove WrongResultTiles
-        
         public void SetupRound()
         {
             SetupRoundObserver();
@@ -43,7 +38,7 @@ namespace DiceyParty.MiniGame.QuickMath
         
         public string GenerateCalculation()
         {
-            if(_calculationIndex % 6 == 0)
+            if(_calculationIndex % 5 == 0)
                 _numberMultiplayer++;
             if(_calculationIndex > 5 && !_negativeNums)
                 _negativeNums = true;
@@ -61,7 +56,7 @@ namespace DiceyParty.MiniGame.QuickMath
             for (var i = 0; i < _tileHandler.Count; i++)
             {
                 var randomNums = GenerateRandomNums(range, _negativeNums);
-                switch (_calculationIndex % 6)
+                switch (_calculationIndex % 5)
                 {
                     case 0:
                         if (correctResultIndex == i)
@@ -80,19 +75,19 @@ namespace DiceyParty.MiniGame.QuickMath
                         break;
                     case 3:
                         if (correctResultIndex == i)
-                            calculation = $"{randomNums[0]} / {randomNums[1]}";
-                        results.Add((float) randomNums[0] / randomNums[1]);
+                            calculation = $"{randomNums[0]} * {randomNums[1]} + {randomNums[2]}";
+                        results.Add(randomNums[0] * randomNums[1] + randomNums[2]);
                         break;
                     case 4:
                         if (correctResultIndex == i)
-                            calculation = $"{randomNums[0]} + {randomNums[1]} * {randomNums[2]}";
-                        results.Add(randomNums[0] + randomNums[1] * randomNums[2]);
+                            calculation = $"{randomNums[0]} - {randomNums[1]} * {randomNums[2]}";
+                        results.Add(randomNums[0] - randomNums[1] * randomNums[2]);
                         break;
-                    case 5:
+                    /*case 5:
                         if (correctResultIndex == i)
                             calculation = $"{randomNums[0]} + {randomNums[1]} / {randomNums[2]}";
                         results.Add(randomNums[0] + (float) randomNums[1] / randomNums[2]);
-                        break;
+                        break;*/
                     default:
                         throw new Exception("Wrong Input");
                 }

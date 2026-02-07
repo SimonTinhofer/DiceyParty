@@ -20,6 +20,8 @@ namespace DiceyParty
             }
             else
             {
+                _alertMsg = "For the best experience make sure you have a stable internet connection. \n\nIf you are on mobile consider downloading by \"add website to homescreen\" for better fullscreen and performance.\n\nThis game is intended to be played by 3 - 6 players.";
+                AlertManager.OnNewAlertManagerLoaded += ShowAlert;
                 _instance = this;
                 DontDestroyOnLoad(gameObject);
             }

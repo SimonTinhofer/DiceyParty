@@ -107,9 +107,13 @@ namespace DiceyParty.MiniGame.QuickMath
         public void PlayerDied(int ownerId)
         {
             if(!_results.TryAdd(ownerId, _currentRound)) return;
-            if (_results.Count == SessionDataSystem.Instance.GetClientIds().Count)
+            if (_results.Count >= SessionDataSystem.Instance.GetClientIds().Count - 1)
             {
                 _gamePhaseHasEnded = true;
+                foreach (var id in SessionDataSystem.Instance.GetClientIds())
+                {
+                    _results.TryAdd(id, _currentRound + 1);
+                }
                 GeneratePlacements();
             }
         }
