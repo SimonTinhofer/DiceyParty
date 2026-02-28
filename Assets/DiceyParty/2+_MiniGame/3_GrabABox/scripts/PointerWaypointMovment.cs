@@ -6,10 +6,10 @@ namespace DiceyParty.MiniGame.GrabABox
 {
     public class PointerWaypointMovment : NetworkBehaviour
     {
-        //hard coded config
         [SerializeField] private GrabABoxConfigSO _gameConfig;
         [SerializeField] private LayerMask _planeMask;
         [SerializeField] private Transform _body;
+        [SerializeField] private Animator _animator;
     
         private bool _isMoving;
         private Vector3 _wayPoint;
@@ -47,6 +47,8 @@ namespace DiceyParty.MiniGame.GrabABox
                     out Vector3 hitPoint)) return transform.position;
         
             _isMoving = true;
+            UpdateAnimation(true);
+            
             return hitPoint;
 
         }
@@ -60,11 +62,36 @@ namespace DiceyParty.MiniGame.GrabABox
             {
                 transform.position = _wayPoint;
                 _isMoving = false;
+                UpdateAnimation(false);
                 return;
             }
             _body.LookAt(_wayPoint);
             transform.position += _movementDirection.normalized * (_gameConfig.Speed * Time.deltaTime);
         
+        }
+
+        private void UpdateAnimation(bool isRunning)
+        {
+            ToggleIsRunning(isRunning);
+            UpdateAnimationServer(isRunning);
+        }
+
+        [ServerRpc]
+        private void UpdateAnimationServer(bool isRunning)
+        {
+            ToggleIsRunning(isRunning);
+            UpdateAnimationObservers(isRunning);
+        }
+
+        [ObserversRpc(ExcludeOwner =  true)]
+        private void UpdateAnimationObservers(bool isRunning)
+        {
+            ToggleIsRunning(isRunning);
+        }
+        
+        private void ToggleIsRunning(bool toggle)
+        {
+            _animator.SetBool("isRunning", toggle);
         }
     }
 }
