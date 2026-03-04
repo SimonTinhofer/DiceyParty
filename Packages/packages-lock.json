@@ -6,10 +6,9 @@
       "source": "git",
       "dependencies": {
         "com.unity.nuget.newtonsoft-json": "3.2.1",
-        "com.unity.toolchain.win-x86_64-linux-x86_64": "2.0.6",
         "com.unity.modules.uielements": "1.0.0"
       },
-      "hash": "fe7c540b806f7a77daefcbee655924cab1b98188"
+      "hash": "35356e28ab54bbca5eb7121d64c954b55985ecb3"
     },
     "com.unity.2d.sprite": {
       "version": "1.0.0",
@@ -171,6 +170,15 @@
         "com.unity.render-pipelines.core": "17.0.3"
       }
     },
+    "com.unity.sdk.linux-x86_64": {
+      "version": "1.0.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.sysroot.base": "1.0.2"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.searcher": {
       "version": "4.9.4",
       "depth": 2,
@@ -194,20 +202,11 @@
         "com.unity.searcher": "4.9.3"
       }
     },
-    "com.unity.sysroot": {
-      "version": "2.0.7",
-      "depth": 2,
+    "com.unity.sysroot.base": {
+      "version": "1.0.2",
+      "depth": 1,
       "source": "registry",
       "dependencies": {},
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.sysroot.linux-x86_64": {
-      "version": "2.0.6",
-      "depth": 2,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.sysroot": "2.0.7"
-      },
       "url": "https://packages.unity.com"
     },
     "com.unity.test-framework": {
@@ -242,13 +241,12 @@
       },
       "url": "https://packages.unity.com"
     },
-    "com.unity.toolchain.win-x86_64-linux-x86_64": {
-      "version": "2.0.6",
-      "depth": 1,
+    "com.unity.toolchain.win-x86_64-linux": {
+      "version": "1.0.2",
+      "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.unity.sysroot": "2.0.7",
-        "com.unity.sysroot.linux-x86_64": "2.0.6"
+        "com.unity.sysroot.base": "1.0.2"
       },
       "url": "https://packages.unity.com"
     },
