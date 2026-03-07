@@ -379,6 +379,10 @@ namespace FishNet.Object
 
         protected virtual void Awake()
         {
+            _predictionBehaviours = CollectionCaches<NetworkBehaviour>.RetrieveHashSet();
+            _rigidbodyTransformsPreReconcileProperties = ResettableT2CollectionCaches<Transform, PreReconcilingTransformProperties>.RetrieveDictionary();
+            _updatedPreReconcilingTransformProperties = ResettableCollectionCaches<PreReconcilingTransformProperties>.RetrieveList();
+
             _isStatic = gameObject.isStatic;
 
             /* If networkBehaviours are not yet initialized then do so now.
@@ -412,10 +416,19 @@ namespace FishNet.Object
                 ResetState(asServer: true);
                 ResetState(asServer: false);
             }
+            //Client is started and is scene object.
+            else if (IsClientStarted && IsSceneObject)
+            {
+                ResetState(asServer: false);
+            }
         }
 
         private void OnDestroy()
         {
+            CollectionCaches<NetworkBehaviour>.Store(_predictionBehaviours);
+            ResettableT2CollectionCaches<Transform, PreReconcilingTransformProperties>.Store(_rigidbodyTransformsPreReconcileProperties);
+            CollectionCaches<PreReconcilingTransformProperties>.Store(_updatedPreReconcilingTransformProperties);
+
             SetIsDestroying(DespawnType.Destroy);
 
             // The object never initialized for use.
@@ -668,7 +681,8 @@ namespace FishNet.Object
 
             _networkObserverInitiliazed = true;
 
-            InitializePredictionEarly(networkManager, asServer);
+            InitializeEarly_Prediction(networkManager, asServer);
+
             // Add to connections objects. Collection is a hashset so this can be called twice for clientHost.
             if (owner != null)
                 owner.AddObject(this);
@@ -859,7 +873,7 @@ namespace FishNet.Object
                 NetworkManager.LogError($"Method {nameof(SetInitializedValues)} should only be called at runtime.");
                 return;
             }
-            
+
             /* NetworkManager timestamp is not set yet -- this somehow was called before the NetworkManager.
              * The NetworkManager has the highest priority on initialization so it should be ready before
              * this is called by the scene load callbacks via Unity, and prefabs are initialized by the
@@ -916,7 +930,7 @@ namespace FishNet.Object
                 PredictedOwner = po;
 
             ComponentIndex = componentId;
-            
+
             /* Add an empty nb if needed. Do not add to NetworkBehaviours
              * since it will be picked up via nb finding below. */
             TryAddEmptyNetworkBehaviour(this, addToNetworkBehaviours: false, out _);
@@ -929,7 +943,7 @@ namespace FishNet.Object
             {
                 if (parentNob != parentNetworkObject)
                     NetworkManager.Log($"The provided parent NetworkObject {parentNob.ToString()} was expected to be the same as {parentNetworkObject.ToString()}, but was not. No issues will occur from this -- please report the stack trace of this message.");
-                
+
                 /* Try to add an emptyNetworkBehaviour to this objects parent
                  * if one does not already exist. This is so this networkObject can
                  * identify its parent properly. */
@@ -984,6 +998,10 @@ namespace FishNet.Object
                 nbCache.AddRange(nbCache2);
             }
 
+            /* The maximum number of NetworkBehaviours allowed per NetworkObject.
+             * This value is reset with nested NetworkObjects. */
+            const byte maximumNetworkBehaviours = 250;
+
             /* If there's no NBs then add an empty one.
              * All NetworkObjects must have at least 1 NetworkBehaviour
              * to allow nesting. */
@@ -991,6 +1009,13 @@ namespace FishNet.Object
             {
                 if (TryAddEmptyNetworkBehaviour(this, addToNetworkBehaviours: false, out NetworkBehaviour addedNetworkBehaviour))
                     nbCache.Add(addedNetworkBehaviour);
+            }
+            else if (nbCache.Count > maximumNetworkBehaviours)
+            {
+                NetworkManager.LogError($"{gameObject.name} has {nbCache.Count} NetworkBehaviours but the limit is {maximumNetworkBehaviours} under a single NetworkObject. Reduce the amount of NetworkBehaviours or use nested NetworkObjects to exceed this limit.");
+                StoreCacheCollections();
+
+                return;
             }
 
             // Copy to array.
@@ -1004,9 +1029,7 @@ namespace FishNet.Object
                 nb.SerializeComponents(this, (byte)i);
             }
 
-            CollectionCaches<Transform>.Store(transformCache);
-            CollectionCaches<NetworkBehaviour>.Store(nbCache);
-            CollectionCaches<NetworkBehaviour>.Store(nbCache2);
+            StoreCacheCollections();
 
             // Tell children nobs to update their NetworkBehaviours.
             foreach (NetworkObject item in InitializedNestedNetworkObjects)
@@ -1017,6 +1040,13 @@ namespace FishNet.Object
 
             // Update global states to that of this one.
             SetChildGlobalState();
+
+            void StoreCacheCollections()
+            {
+                CollectionCaches<Transform>.Store(transformCache);
+                CollectionCaches<NetworkBehaviour>.Store(nbCache);
+                CollectionCaches<NetworkBehaviour>.Store(nbCache2);
+            }
         }
 
         /// <summary>
@@ -1027,7 +1057,7 @@ namespace FishNet.Object
         private bool TryAddEmptyNetworkBehaviour(NetworkObject nob, bool addToNetworkBehaviours, out NetworkBehaviour addedNetworkBehaviour)
         {
             Transform target = nob.transform;
-            
+
             // Add to target if it does not have a NB yet.
             if (!target.TryGetComponent(out addedNetworkBehaviour))
             {
@@ -1039,8 +1069,6 @@ namespace FishNet.Object
                 }
 
                 addedNetworkBehaviour = target.gameObject.AddComponent<EmptyNetworkBehaviour>();
-                if (nob.name.StartsWith("Issue-"))
-                    Debug.LogWarning($"Adding EmptyNetworkBehaviour to [{nob.name}] AddToNetworkBehaviours [{addToNetworkBehaviours}]");
                 if (addToNetworkBehaviours)
                 {
                     nob.NetworkBehaviours.Add(addedNetworkBehaviour);
@@ -1067,9 +1095,9 @@ namespace FishNet.Object
         {
             if (NetworkManager == null)
                 return false;
-            else if (asServer && !IsServerInitialized)
+            if (asServer && !IsServerInitialized)
                 return false;
-            else if (!asServer && !IsClientInitialized)
+            if (!asServer && !IsClientInitialized)
                 return false;
 
             return true;
@@ -1126,7 +1154,6 @@ namespace FishNet.Object
             for (int i = 0; i < count; i++)
                 NetworkBehaviours[i].ResetState(asServer);
 
-            ResetState_Prediction(asServer);
             ResetState_Observers(asServer);
 
             /* If nested only unset state if despawned.
@@ -1199,7 +1226,7 @@ namespace FishNet.Object
 
                 if (newOwner != null && newOwner.IsActive && !newOwner.LoadedStartScenes(true))
                 {
-                    NetworkManager.LogWarning($"Ownership has been transfered to ConnectionId {newOwner.ClientId} but this is not recommended until after they have loaded start scenes. You can be notified when a connection loads start scenes by using connection.OnLoadedStartScenes on the connection, or SceneManager.OnClientLoadStartScenes.");
+                    NetworkManager.LogWarning($"Ownership has been transferred to ConnectionId {newOwner.ClientId} but this is not recommended until after they have loaded start scenes. You can be notified when a connection loads start scenes by using connection.OnLoadedStartScenes on the connection, or SceneManager.OnClientLoadStartScenes.");
                 }
             }
 
