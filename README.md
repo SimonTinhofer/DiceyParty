@@ -12,10 +12,6 @@ That makes matches faster, and it adds a layer of tactics — since you can't se
 
 Six realtime minigames sit on top of the board.
 
-## How it works
-
-The server is authoritative. Clients send intents rather than state, the server waits for every player's input for the round, resolves them as one step, and broadcasts the result. No client can advance the game on its own, and a slow player can't desync the others.
-
 ## Stack
 
 - **Unity / C#** — game clients
